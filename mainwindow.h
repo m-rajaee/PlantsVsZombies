@@ -4,17 +4,17 @@
 #include <QMainWindow>
 QT_BEGIN_NAMESPACE
 namespace Ui {
-class MainWindow;
+class PlantsLogin;
 }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow
+class PlantsLogin : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    PlantsLogin(QWidget *parent = nullptr);
+    ~PlantsLogin();
 
 private slots:
     void on_pushButton_2_clicked();
@@ -22,6 +22,6 @@ private slots:
     void on_pushButton_clicked();
 
 private:
-    Ui::MainWindow *ui;
+    Ui::PlantsLogin *ui;
 };
 #endif // MAINWINDOW_H

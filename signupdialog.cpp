@@ -21,7 +21,7 @@ void SignupDialog::on_buttonBox_accepted() {
         QMessageBox::critical(nullptr, "ERROR", "Invalid Phone Number");
     }
     else if (ui->email->text().contains("@") && ui->email->text().contains(".com") && ui->phone->text().length() == 11){
-    emit SignupInformation_Entered(ui->name->text(),ui->username->text(),ui->phone->text(),ui->email->text(),ui->password->text());
+    emit SignupInformation_Entered(ui->username->text(),ui->password->text(),ui->name->text(),ui->phone->text(),ui->email->text());
     this->close();
     }
 }
