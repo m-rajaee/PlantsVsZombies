@@ -15,9 +15,12 @@ public:
     void resetPassword(const QString &phone, const QString &newPassword);
     void addHistory(const QString& username,const QString& harif,const QString& role, const QString& winner);
     void ChangeInformation(const QString &username, const QString& newusername ,const QString &newpassword, const QString &newname, const QString &newphone, const QString & newemail);
+    void SendMessage(const QString& message);
 private slots:
     void onReadyRead();
-
+    void getOrder(QString order);
+signals:
+    void Order(QString);
 private:
     QTcpSocket *socket;
 };

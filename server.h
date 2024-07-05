@@ -14,6 +14,7 @@ class Server : public QTcpServer
 public:
     Server(QObject *parent = nullptr);
 
+
 protected:
     void incomingConnection(qintptr socketDescriptor) override;
 
@@ -22,7 +23,7 @@ private slots:
     void onDisconnected();
 
 private:
-    QHash<QTcpSocket*, QString> clients;
+    QSet<QTcpSocket*> clients;
     QJsonArray users; // array to hold user information
     QJsonArray History;
     void loadUserData();

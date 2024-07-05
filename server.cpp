@@ -20,7 +20,7 @@ void Server::incomingConnection(qintptr socketDescriptor)
     if (socket->setSocketDescriptor(socketDescriptor)) {
         connect(socket, &QTcpSocket::readyRead, this, &Server::onReadyRead);
         connect(socket, &QTcpSocket::disconnected, this, &Server::onDisconnected);
-        clients[socket] = "";
+        clients.insert(socket);
         qDebug() << "New client connected!";
     } else {
         delete socket;
@@ -49,7 +49,7 @@ void Server::onDisconnected()
 
 void Server::loadUserData()
 {
-    QFile file("D:/Qt/temp3OfProject/users.json");
+    QFile file("D:/Qt/temp2OfProject/users.json");
     if (file.open(QIODevice::ReadOnly)) {
         QByteArray data = file.readAll();
         QJsonDocument doc = QJsonDocument::fromJson(data);
@@ -58,7 +58,7 @@ void Server::loadUserData()
     }
 }
 void Server::loadHistory(){
-    QFile file("D:/Qt/temp3OfProject/history.json");
+    QFile file("D:/Qt/temp2OfProject/history.json");
     if (file.open(QIODevice::ReadOnly)) {
         QByteArray data = file.readAll();
         QJsonDocument doc = QJsonDocument::fromJson(data);
@@ -69,7 +69,7 @@ void Server::loadHistory(){
 
 void Server::saveUserData()
 {
-    QFile file("D:/Qt/temp3OfProject/users.json");
+    QFile file("D:/Qt/temp2OfProject/users.json");
     if (file.open(QIODevice::WriteOnly)) {
         QJsonObject obj;
         obj["users"] = users;
@@ -79,7 +79,7 @@ void Server::saveUserData()
     }
 }
 void Server:: saveHistory(){
-    QFile file("D:/Qt/temp3OfProject/history.json");
+    QFile file("D:/Qt/temp2OfProject/history.json");
     if (file.open(QIODevice::WriteOnly)) {
         QJsonObject obj;
         obj["users"] = History;
@@ -261,7 +261,14 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
         saveHistory();
         stream << "Information Changed SuccesFully";
     }else {
-        stream << "Unknown command";
+        //Seding Request To other clients
+        for(auto clientsocket : clients){
+            if(clientsocket != socket){
+                QTextStream clientsream(clientsocket);
+                clientsream << request;
+                clientsocket->flush();
+            }
+        }
     }
     socket->flush();
 }

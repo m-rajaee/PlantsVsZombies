@@ -5,6 +5,7 @@
 Client::Client(QObject *parent) : QObject(parent), socket(new QTcpSocket(this))
 {
     connect(socket, &QTcpSocket::readyRead, this, &Client::onReadyRead);
+    connect(this,SIGNAL(Order(QString)),this,SLOT(getOrder(QString)));
 }
 
 void Client::connectToServer(const QString &host, quint16 port)
@@ -63,11 +64,28 @@ void Client::ChangeInformation(const QString &username, const QString &newuserna
     }
 }
 
+void Client::SendMessage(const QString &message)
+{
+    if (socket->state() == QTcpSocket::ConnectedState) {
+        QTextStream stream(socket);
+        stream << message;
+        socket->flush();
+        qDebug() << "Message sent to server:" << message;
+    } else {
+        qDebug() << "Not connected to server!";
+    }
+}
+
 void Client::onReadyRead()
 {
     QTextStream stream(socket);
     QString response = stream.readAll();
-    qDebug() << "Server response:" << response;
+    emit Order(response);
+}
+
+void Client::getOrder(QString order)
+{
+    qDebug() << order;
 }
 
 
