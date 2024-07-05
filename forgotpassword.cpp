@@ -1,6 +1,6 @@
 #include "forgotpassword.h"
 #include "ui_forgotpassword.h"
-
+#include <QMessageBox>
 ForgotPassword::ForgotPassword(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::ForgotPassword)
@@ -23,5 +23,15 @@ void ForgotPassword::on_buttonBox_accepted()
 {
     emit ChangeForgotedPassword(ui->lineEdit->text(),ui->lineEdit_2->text());
     this->close();
+}
+
+void ForgotPassword::GetOrderOfClient(QString order)
+{
+    if(order == "PasswordResetError"){
+        QMessageBox::critical(nullptr, "Password Reset ERROR", "No User With this Phone Number Exist");
+    }else if (order == "PasswordReseted"){
+        QMessageBox::critical(nullptr, "Password Reseted", "Password Reseted SuccesFully");
+        this->close();
+    }
 }
 

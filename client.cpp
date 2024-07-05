@@ -85,7 +85,11 @@ void Client::onReadyRead()
 
 void Client::getOrder(QString order)
 {
-    qDebug() << order;
+    qDebug() << "Server Said : " << order;
+    QStringList parts = order.split("|");
+    if(parts[0] == "Loggedin"){
+        Username = parts[1];
+    }
 }
 
 

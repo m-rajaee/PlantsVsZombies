@@ -15,12 +15,15 @@ SignupDialog::~SignupDialog()
 
 void SignupDialog::on_buttonBox_accepted() {
     if(!ui->email->text().contains("@") || !ui->email->text().contains(".com")){
-        QMessageBox::critical(nullptr, "ERROR", "Invalid Email");
+        QMessageBox::critical(nullptr, "SignUp ERROR", "Invalid Email");
     }
     if(ui->phone->text().length() != 11){
-        QMessageBox::critical(nullptr, "ERROR", "Invalid Phone Number");
+        QMessageBox::critical(nullptr, "SignUp ERROR", "Invalid Phone Number");
     }
-    else if (ui->email->text().contains("@") && ui->email->text().contains(".com") && ui->phone->text().length() == 11){
+    if(ui->password->text().length() < 8){
+        QMessageBox::critical(nullptr, "SignUp ERROR", "Password Should Have At least 8 Characters");
+    }
+    else if (ui->email->text().contains("@") && ui->email->text().contains(".com") && ui->phone->text().length() == 11 && ui->password->text().length() >=8){
     emit SignupInformation_Entered(ui->username->text(),ui->password->text(),ui->name->text(),ui->phone->text(),ui->email->text());
     this->close();
     }
@@ -29,3 +32,16 @@ void SignupDialog::on_buttonBox_rejected()
 {
     this->close();
 }
+
+void SignupDialog::GetOrderOfClient(QString order)
+{
+    if(order == "SingupErrorOfusername"){
+        QMessageBox::critical(nullptr, "SignUp ERROR", "This Username Allready Exist");
+    }else if(order == "SingupErrorOfPhoneNumeber"){
+        QMessageBox::critical(nullptr, "SignUp ERROR", "This PhoneNumber Allready SignedUp");
+    }else if (order == "SignedUP"){
+        QMessageBox::critical(nullptr, "Signed UP", "You SignedUp SuccesFully");
+        this->close();
+    }
+}
+

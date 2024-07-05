@@ -18,6 +18,7 @@ public:
 private slots:
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();
+    void GetOrderOfClient(QString order);
 signals:
     void SignupInformation_Entered(QString,QString,QString,QString,QString);
 

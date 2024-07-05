@@ -98,14 +98,14 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
     QTextStream stream(socket);
     QStringList parts = request.split(" ");
     if (parts.isEmpty()) {
-        stream << "Invalid request\n";
+        stream << "Invalid request";
         return;
     }
 
     QString command = parts[0].toUpper();
     if (command == "REGISTER") {
         if (parts.size() != 6) {
-            stream << "Invalid parameters\n";
+            stream << "Invalid parameters";
             return;
         }
         QString username = parts[1];
@@ -113,6 +113,7 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
         QString name = parts[3];
         QString phone = parts[4];
         QString email = parts[5];
+        qDebug() << username;
         bool exist = false;
         for (auto it = users.begin();it!=users.end();it++) {
             QJsonObject obj = (*it).toObject();
@@ -122,7 +123,19 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
             }
         }
         if(exist){
-            stream << "Username Already Exist";
+            stream << "SingupErrorOfusername";
+            return;
+        }
+        exist = false;
+        for (auto it = users.begin();it!=users.end();it++) {
+            QJsonObject obj = (*it).toObject();
+            if (obj["phone"].toString() == phone) {
+                exist = true;
+                break;
+            }
+        }
+        if(exist){
+            stream << "SingupErrorOfPhoneNumeber";
             return;
         }
         QJsonObject obj;
@@ -133,10 +146,10 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
         obj["email"] = email;
         users.append(obj);
         saveUserData();
-        stream << "Registration successful\n";
+        stream << "SignedUP";
     } else if (command == "LOGIN") {
         if (parts.size() != 3) {
-            stream << "Invalid parameters\n";
+            stream << "Invalid parameters";
             return;
         }
         QString username = parts[1];
@@ -153,13 +166,13 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
         }
 
         if (valid) {
-            stream << "Login successful\n";
+            stream << "Loggedin"<<"|"<<username;
         } else {
-            stream << "Invalid username or password\n";
+            stream << "LoginError";
         }
     } else if (command == "RESET_PASSWORD") {
         if (parts.size() != 3) {
-            stream << "Invalid parameters\n";
+            stream << "Invalid parameters";
             return;
         }
         QString phone = parts[1];
@@ -178,9 +191,9 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
 
         if (valid) {
             saveUserData();
-            stream << "Password reset successful\n";
+            stream << "PasswordReseted";
         } else {
-            stream << "Invalid phone number\n";
+            stream << "PasswordResetError";
         }
     }else if (command == "ADD_HISTORY"){
         QString username = parts[1];
@@ -197,7 +210,7 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
             }
         }
         if(!exist){
-            stream << "Username of player Doesn't Exist to Have Histoy";
+            qDebug() << "Username of player Doesn't Exist to Have Histoy";
             return;
         }
         exist = false;
@@ -209,7 +222,7 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
             }
         }
         if(!exist){
-            stream << "Username of harif Does'nt Exist to Have Histoy";
+            qDebug() << "Username of harif Does'nt Exist to Have Histoy";
             return;
         }
         QJsonObject obj;
@@ -243,7 +256,7 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
             }
         }
         if (!exist) {
-            stream << "ERROR : The Old user Doesn't Exist";
+            stream << "ChangeInformationError";
             return;
         }
         saveUserData();
@@ -259,16 +272,16 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
             }
         }
         saveHistory();
-        stream << "Information Changed SuccesFully";
+        stream << "InformationChanged";
     }else {
-        //Seding Request To other clients
+        //Sending Request(Message) To other clients
         for(auto clientsocket : clients){
             if(clientsocket != socket){
                 QTextStream clientsream(clientsocket);
                 clientsream << request;
                 clientsocket->flush();
-            }
         }
+    }
     }
     socket->flush();
 }

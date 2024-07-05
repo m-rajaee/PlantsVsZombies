@@ -12,7 +12,7 @@ class ZombiesLogin : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit ZombiesLogin(QWidget *parent = nullptr);
+    explicit ZombiesLogin(Client* c,QWidget *parent = nullptr);
     ~ZombiesLogin();
 
 private slots:
@@ -21,9 +21,11 @@ private slots:
     void on_pushButton_clicked();
     void Resetpassword(QString phone,QString newpass);
     void on_pushButton_3_clicked();
+    void GetOrderOfClient(QString order);
+    void GetBack();
 private:
     Ui::ZombiesLogin *ui;
-    Client zombies;
+    Client* zombies;
 };
 
 #endif // ZOMBIESLOGIN_H

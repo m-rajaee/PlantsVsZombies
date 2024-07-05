@@ -19,7 +19,7 @@ signals:
 private slots:
     void on_buttonBox_rejected();
     void on_buttonBox_accepted();
-
+    void GetOrderOfClient(QString order);
 private:
     Ui::ForgotPassword *ui;
 };

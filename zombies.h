@@ -14,7 +14,8 @@ class Zombies : public QDialog
 public:
     explicit Zombies(QWidget *parent = nullptr);
     ~Zombies();
-
+signals:
+    void Back();
 private:
     Ui::Zombies *ui;
 };
