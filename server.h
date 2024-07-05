@@ -7,7 +7,6 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QFile>
-
 class Server : public QTcpServer
 {
     Q_OBJECT
@@ -25,9 +24,11 @@ private slots:
 private:
     QHash<QTcpSocket*, QString> clients;
     QJsonArray users; // array to hold user information
-
+    QJsonArray History;
     void loadUserData();
     void saveUserData();
+    void loadHistory();
+    void saveHistory();
     void processRequest(QTcpSocket *socket, const QString &request);
     QString hashPassword(const QString &password); // function to hash passwords
 };

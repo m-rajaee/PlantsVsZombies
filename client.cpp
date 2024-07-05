@@ -1,7 +1,7 @@
 #include "client.h"
 #include <QTextStream>
 #include <QDebug>
-
+#include<QDateTime>
 Client::Client(QObject *parent) : QObject(parent), socket(new QTcpSocket(this))
 {
     connect(socket, &QTcpSocket::readyRead, this, &Client::onReadyRead);
@@ -21,7 +21,7 @@ void Client::registerUser(const QString &username, const QString &password, cons
 {
     if (socket->state() == QTcpSocket::ConnectedState) {
         QTextStream stream(socket);
-        stream << "REGISTER " << username << " " << password << " " << name << " " << phone << " " << email << "\n";
+        stream << "REGISTER " << username << " " << password << " " << name << " " << phone << " " << email;
         socket->flush();
     }
 }
@@ -30,7 +30,7 @@ void Client::loginUser(const QString &username, const QString &password)
 {
     if (socket->state() == QTcpSocket::ConnectedState) {
         QTextStream stream(socket);
-        stream << "LOGIN " << username << " " << password << "\n";
+        stream << "LOGIN " << username << " " << password;
         socket->flush();
     }
 }
@@ -39,7 +39,17 @@ void Client::resetPassword(const QString &phone, const QString &newPassword)
 {
     if (socket->state() == QTcpSocket::ConnectedState) {
         QTextStream stream(socket);
-        stream << "RESET_PASSWORD " << phone << " " << newPassword << "\n";
+        stream << "RESET_PASSWORD " << phone << " " << newPassword;
+        socket->flush();
+    }
+}
+
+void Client::addHistory(QString username, QString harif, QString role, QString winner)
+{
+    if (socket->state() == QTcpSocket::ConnectedState) {
+        QTextStream stream(socket);
+        QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd,hh:mm:ss");
+        stream << "ADD_HISTORY " << username << " " << harif << " " << time << " " << role << " " << winner;
         socket->flush();
     }
 }
@@ -50,3 +60,5 @@ void Client::onReadyRead()
     QString response = stream.readAll();
     qDebug() << "Server response:" << response;
 }
+
+

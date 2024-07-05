@@ -3,7 +3,6 @@
 
 #include <QTcpSocket>
 #include <QString>
-
 class Client : public QObject
 {
     Q_OBJECT
@@ -14,7 +13,7 @@ public:
     void registerUser(const QString &username, const QString &password, const QString &name, const QString &phone, const QString &email);
     void loginUser(const QString &username, const QString &password);
     void resetPassword(const QString &phone, const QString &newPassword);
-
+    void addHistory(QString username,QString harif,QString role,QString winner);
 private slots:
     void onReadyRead();
 

@@ -6,6 +6,7 @@
 Server::Server(QObject *parent) : QTcpServer(parent)
 {
     loadUserData();
+    loadHistory();
     if (this->listen(QHostAddress::Any, 12345)) {
         qDebug() << "Server started!";
     } else {
@@ -48,7 +49,7 @@ void Server::onDisconnected()
 
 void Server::loadUserData()
 {
-    QFile file("D:/Qt/temp2ofproject/users.json");
+    QFile file("D:/Qt/temp3OfProject/users.json");
     if (file.open(QIODevice::ReadOnly)) {
         QByteArray data = file.readAll();
         QJsonDocument doc = QJsonDocument::fromJson(data);
@@ -56,10 +57,19 @@ void Server::loadUserData()
         file.close();
     }
 }
+void Server::loadHistory(){
+    QFile file("D:/Qt/temp3OfProject/history.json");
+    if (file.open(QIODevice::ReadOnly)) {
+        QByteArray data = file.readAll();
+        QJsonDocument doc = QJsonDocument::fromJson(data);
+        History = doc.object().value("users").toArray();
+        file.close();
+    }
+}
 
 void Server::saveUserData()
 {
-    QFile file("D:/Qt/temp2ofproject/users.json");
+    QFile file("D:/Qt/temp3OfProject/users.json");
     if (file.open(QIODevice::WriteOnly)) {
         QJsonObject obj;
         obj["users"] = users;
@@ -68,7 +78,16 @@ void Server::saveUserData()
         file.close();
     }
 }
-
+void Server:: saveHistory(){
+    QFile file("D:/Qt/temp3OfProject/history.json");
+    if (file.open(QIODevice::WriteOnly)) {
+        QJsonObject obj;
+        obj["users"] = History;
+        QJsonDocument doc(obj);
+        file.write(doc.toJson());
+        file.close();
+    }
+}
 QString Server::hashPassword(const QString &password)
 {
     return QString(QCryptographicHash::hash(password.toUtf8(), QCryptographicHash::Sha256).toHex());
@@ -94,14 +113,24 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
         QString name = parts[3];
         QString phone = parts[4];
         QString email = parts[5];
-
+        bool exist = false;
+        for (auto it = users.begin();it!=users.end();it++) {
+            QJsonObject obj = (*it).toObject();
+            if (obj["username"].toString() == username) {
+                exist = true;
+                break;
+            }
+        }
+        if(exist){
+            stream << "Username Already Exist";
+            return;
+        }
         QJsonObject obj;
         obj["username"] = username;
         obj["password"] = hashPassword(password);
         obj["name"] = name;
         obj["phone"] = phone;
         obj["email"] = email;
-
         users.append(obj);
         saveUserData();
         stream << "Registration successful\n";
@@ -153,6 +182,45 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
         } else {
             stream << "Invalid phone number\n";
         }
+    }else if (command == "ADD_HISTORY"){
+        QString username = parts[1];
+        QString harif = parts[2];
+        QString time = parts[3];
+        QString role = parts[4];
+        QString winner = parts[5];
+        bool exist = false;
+        for (auto it = users.begin();it!=users.end();it++) {
+            QJsonObject obj = (*it).toObject();
+            if (obj["username"].toString() == username) {
+                exist = true;
+                break;
+            }
+        }
+        if(!exist){
+            stream << "Username of player Doesn't Exist to Have Histoy";
+            return;
+        }
+        exist = false;
+        for (auto it = users.begin();it!=users.end();it++) {
+            QJsonObject obj = (*it).toObject();
+            if (obj["username"].toString() == harif) {
+                exist = true;
+                break;
+            }
+        }
+        if(!exist){
+            stream << "Username of harif Does'nt Exist to Have Histoy";
+            return;
+        }
+        QJsonObject obj;
+        obj["username"] = username;
+        obj["harif"] = harif;
+        obj["time"] = time;
+        obj["role"] = role;
+        obj["winner"] = winner;
+        History.append(obj);
+        saveHistory();
+        stream << "Registration successful\n";
     } else {
         stream << "Unknown command\n";
     }
