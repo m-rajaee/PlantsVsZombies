@@ -44,12 +44,21 @@ void Client::resetPassword(const QString &phone, const QString &newPassword)
     }
 }
 
-void Client::addHistory(QString username, QString harif, QString role, QString winner)
+void Client::addHistory(const QString& username,const QString& harif, const QString& role, const QString& winner)
 {
     if (socket->state() == QTcpSocket::ConnectedState) {
         QTextStream stream(socket);
         QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd,hh:mm:ss");
         stream << "ADD_HISTORY " << username << " " << harif << " " << time << " " << role << " " << winner;
+        socket->flush();
+    }
+}
+
+void Client::ChangeInformation(const QString &username, const QString &newusername, const QString &newpassword, const QString &newname, const QString &newphone, const QString &newemail)
+{
+    if (socket->state() == QTcpSocket::ConnectedState) {
+        QTextStream stream(socket);
+        stream << "CHANGE_INFORMATION " << username << " " << newusername << " " << newpassword << " " << newname << " " << newphone << " " << newemail;
         socket->flush();
     }
 }

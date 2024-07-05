@@ -220,10 +220,48 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
         obj["winner"] = winner;
         History.append(obj);
         saveHistory();
-        stream << "Registration successful\n";
-    } else {
-        stream << "Unknown command\n";
+        stream << "New Game Added To History";
+    }else if (command == "CHANGE_INFORMATION"){
+        QString username = parts[1];
+        QString newusername = parts[2];
+        QString newpassword = parts[3];
+        QString newname = parts[4];
+        QString newphone = parts[5];
+        QString newemail = parts[6];
+        bool exist = false;
+        for(auto it = users.begin();it!=users.end();it++){
+            QJsonObject obj = (*it).toObject();
+            if (obj["username"].toString() == username) {
+                obj["username"] = newusername;
+                obj["password"] = hashPassword(newpassword);
+                obj["name"] = newname;
+                obj["phone"] = newphone;
+                obj["email"] = newemail;
+                *it = obj;
+                exist = true;
+                break;
+            }
+        }
+        if (!exist) {
+            stream << "ERROR : The Old user Doesn't Exist";
+            return;
+        }
+        saveUserData();
+        for(auto it = History.begin();it!=History.end();it++){
+            QJsonObject obj = (*it).toObject();
+            if (obj["username"].toString() == username) {
+                obj["username"] = newusername;
+                *it = obj;
+            }
+            if(obj["harif"].toString() == username){
+                obj["harif"] = newusername;
+                *it = obj;
+            }
+        }
+        saveHistory();
+        stream << "Information Changed SuccesFully";
+    }else {
+        stream << "Unknown command";
     }
-
     socket->flush();
 }
