@@ -22,7 +22,7 @@ void Client::registerUser(const QString &username, const QString &password, cons
 {
     if (socket->state() == QTcpSocket::ConnectedState) {
         QTextStream stream(socket);
-        stream << "REGISTER " << username << " " << password << " " << name << " " << phone << " " << email;
+        stream << "REGISTER|" << username << "|" << password << "|" << name << "|" << phone << "|" << email;
         socket->flush();
     }
 }
@@ -31,7 +31,7 @@ void Client::loginUser(const QString &username, const QString &password)
 {
     if (socket->state() == QTcpSocket::ConnectedState) {
         QTextStream stream(socket);
-        stream << "LOGIN " << username << " " << password;
+        stream << "LOGIN|" << username << "|" << password;
         socket->flush();
     }
 }
@@ -40,7 +40,7 @@ void Client::resetPassword(const QString &phone, const QString &newPassword)
 {
     if (socket->state() == QTcpSocket::ConnectedState) {
         QTextStream stream(socket);
-        stream << "RESET_PASSWORD " << phone << " " << newPassword;
+        stream << "RESET_PASSWORD|" << phone << "|" << newPassword;
         socket->flush();
     }
 }
@@ -50,7 +50,7 @@ void Client::addHistory(const QString& username,const QString& harif, const QStr
     if (socket->state() == QTcpSocket::ConnectedState) {
         QTextStream stream(socket);
         QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd,hh:mm:ss");
-        stream << "ADD_HISTORY " << username << " " << harif << " " << time << " " << role << " " << winner;
+        stream << "ADD_HISTORY|" << username << "|" << harif << "|" << time << "|" << role << "|" << winner;
         socket->flush();
     }
 }
@@ -59,7 +59,16 @@ void Client::ChangeInformation(const QString &username, const QString &newuserna
 {
     if (socket->state() == QTcpSocket::ConnectedState) {
         QTextStream stream(socket);
-        stream << "CHANGE_INFORMATION " << username << " " << newusername << " " << newpassword << " " << newname << " " << newphone << " " << newemail;
+        stream << "CHANGE_INFORMATION|" << username << "|" << newusername << "|" << newpassword << "|" << newname << "|" << newphone << "|" << newemail;
+        socket->flush();
+    }
+}
+
+void Client::ShowHistory(const QString& username)
+{
+    if (socket->state() == QTcpSocket::ConnectedState) {
+        QTextStream stream(socket);
+        stream << "SHOW_HISTORY|" << username ;
         socket->flush();
     }
 }
@@ -88,6 +97,8 @@ void Client::getOrder(QString order)
     qDebug() << "Server Said : " << order;
     QStringList parts = order.split("|");
     if(parts[0] == "Loggedin"){
+        Username = parts[1];
+    }else if(parts[0] == "InformationChanged"){
         Username = parts[1];
     }
 }

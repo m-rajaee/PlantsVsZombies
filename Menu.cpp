@@ -10,6 +10,7 @@ Menu::Menu(Client* c,QWidget *parent)
     ui->setupUi(this);
     player = c;
     connect(player,SIGNAL(Order(QString)),this,SLOT(GetOrderOfClient(QString)));
+    ui->label->setText("Welcome To The Game, "+player->Username);
 }
 
 Menu::~Menu()
@@ -43,7 +44,8 @@ void Menu::on_pushButton_clicked()
 
 void Menu::on_pushButton_2_clicked()
 {
-
+    ChangeAccountInformation* changeaccountinformation = new ChangeAccountInformation(player);
+    changeaccountinformation->show();
 }
 
 

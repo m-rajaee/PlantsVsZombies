@@ -2,7 +2,6 @@
 #include <QTextStream>
 #include <QDebug>
 #include <QCryptographicHash>
-
 Server::Server(QObject *parent) : QTcpServer(parent)
 {
     loadUserData();
@@ -96,7 +95,7 @@ QString Server::hashPassword(const QString &password)
 void Server::processRequest(QTcpSocket *socket, const QString &request)
 {
     QTextStream stream(socket);
-    QStringList parts = request.split(" ");
+    QStringList parts = request.split("|");
     if (parts.isEmpty()) {
         stream << "Invalid request";
         return;
@@ -166,7 +165,7 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
         }
 
         if (valid) {
-            stream << "Loggedin"<<"|"<<username;
+            stream << "Loggedin"<< "|" << username;
         } else {
             stream << "LoginError";
         }
@@ -242,6 +241,16 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
         QString newphone = parts[5];
         QString newemail = parts[6];
         bool exist = false;
+            for(auto it = users.begin();it!=users.end();it++){
+            QJsonObject obj = (*it).toObject();
+            if (obj["username"].toString() == newusername) {
+                exist = true;
+            }
+            }
+        if (exist) {
+            stream << "ChangeInformationError";
+            return;
+        }
         for(auto it = users.begin();it!=users.end();it++){
             QJsonObject obj = (*it).toObject();
             if (obj["username"].toString() == username) {
@@ -251,13 +260,8 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
                 obj["phone"] = newphone;
                 obj["email"] = newemail;
                 *it = obj;
-                exist = true;
                 break;
             }
-        }
-        if (!exist) {
-            stream << "ChangeInformationError";
-            return;
         }
         saveUserData();
         for(auto it = History.begin();it!=History.end();it++){
@@ -272,8 +276,29 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
             }
         }
         saveHistory();
-        stream << "InformationChanged";
-    }else {
+        stream << "InformationChanged" << " " << newusername;
+    }else if(command == "SHOW_HISTORY"){
+        QString username = parts[1];
+        QFile file("D:/Qt/temp2OfProject/history.json");
+        file.open(QIODevice::ReadOnly);
+        QByteArray data = file.readAll();
+        QJsonDocument doc(QJsonDocument::fromJson(data));
+        QJsonObject jsonObject = doc.object();
+        QJsonArray usersArray = jsonObject["users"].toArray();
+        QString history;
+        for (const QJsonValue &value : usersArray) {
+            QJsonObject userObj = value.toObject();
+            if (userObj["username"].toString() == username) {
+                history.append("Opponent: " + userObj["harif"].toString() + "\n");
+                history.append("Role: " + userObj["role"].toString() + "\n");
+                history.append("Time: " + userObj["time"].toString() + "\n");
+                history.append("Winner: " + userObj["winner"].toString() + "\n");
+                history.append("-------------------------------\n");
+            }
+        }
+        stream << "ShowHistory|"<<history;
+    }
+    else {
         //Sending Request(Message) To other clients
         for(auto clientsocket : clients){
             if(clientsocket != socket){

@@ -64,6 +64,7 @@ else{
 
 void Authorization::GetBack()
 {
+    player->Username="";
     this->show();
 }
 

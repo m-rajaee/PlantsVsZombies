@@ -15,6 +15,7 @@ public:
     void resetPassword(const QString &phone, const QString &newPassword);
     void addHistory(const QString& username,const QString& harif,const QString& role, const QString& winner);
     void ChangeInformation(const QString &username, const QString& newusername ,const QString &newpassword, const QString &newname, const QString &newphone, const QString & newemail);
+    void ShowHistory(const QString& username);
     void SendMessage(const QString& message);
     QString Username;
 private slots:

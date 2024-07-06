@@ -14,7 +14,8 @@ class ShowHistory : public QDialog
 public:
     explicit ShowHistory(Client* c,QWidget *parent = nullptr);
     ~ShowHistory();
-
+private slots:
+    void GetOrderOfClient(QString order);
 private:
     Ui::ShowHistory *ui;
     Client* player;
