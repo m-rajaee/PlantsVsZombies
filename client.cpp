@@ -45,12 +45,12 @@ void Client::resetPassword(const QString &phone, const QString &newPassword)
     }
 }
 
-void Client::addHistory(const QString& username,const QString& harif, const QString& role, const QString& winner)
+void Client::addHistory(const QString& username,const QString& opponent,const QString& role1,const QString& winner1,const QString& role2,const QString& winner2,const QString& role3 ,const QString& winner3,const QString& winner)
 {
     if (socket->state() == QTcpSocket::ConnectedState) {
         QTextStream stream(socket);
         QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd,hh:mm:ss");
-        stream << "ADD_HISTORY|" << username << "|" << harif << "|" << time << "|" << role << "|" << winner;
+        stream << "ADD_HISTORY|" << username << "|" << opponent << "|" << time << "|" << role1 << "|" << winner1 << "|" << role2 << "|" << winner2 << "|" << role3 << "|" << winner3 << "|" << winner;
         socket->flush();
     }
 }

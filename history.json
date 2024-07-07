@@ -1,32 +1,28 @@
 {
-    "users": [
+    "History": [
         {
-            "harif": "user2",
-            "role": "Plant",
-            "time": "2024-07-05,15:59:42",
+            "opponent": "user2",
+            "role1": "Plant",
+            "role2": "Zombie",
+            "role3": "Plant",
+            "time": "2024-07-07,23:38:32",
             "username": "user1",
-            "winner": "user1"
+            "winner": "user1",
+            "winner1": "user1",
+            "winner2": "user1",
+            "winner3": "user1"
         },
         {
-            "harif": "user1",
-            "role": "Plant",
-            "time": "2024-07-05,15:59:42",
+            "opponent": "user1",
+            "role1": "Zombie",
+            "role2": "Plant",
+            "role3": "Zombie",
+            "time": "2024-07-07,23:38:32",
             "username": "user2",
-            "winner": "user1"
-        },
-        {
-            "harif": "user1",
-            "role": "Plant",
-            "time": "2024-07-05,16:02:08",
-            "username": "user2",
-            "winner": "user2"
-        },
-        {
-            "harif": "user2",
-            "role": "Plant",
-            "time": "2024-07-05,16:02:08",
-            "username": "user1",
-            "winner": "user2"
+            "winner": "user1",
+            "winner1": "user1",
+            "winner2": "user1",
+            "winner3": "user1"
         }
     ]
 }

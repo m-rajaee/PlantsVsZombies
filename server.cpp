@@ -48,7 +48,7 @@ void Server::onDisconnected()
 
 void Server::loadUserData()
 {
-    QFile file("D:/Qt/temp2OfProject/users.json");
+    QFile file("D:/Qt/temp3OfProject/users.json");
     if (file.open(QIODevice::ReadOnly)) {
         QByteArray data = file.readAll();
         QJsonDocument doc = QJsonDocument::fromJson(data);
@@ -57,18 +57,18 @@ void Server::loadUserData()
     }
 }
 void Server::loadHistory(){
-    QFile file("D:/Qt/temp2OfProject/history.json");
+    QFile file("D:/Qt/temp3OfProject/history.json");
     if (file.open(QIODevice::ReadOnly)) {
         QByteArray data = file.readAll();
         QJsonDocument doc = QJsonDocument::fromJson(data);
-        History = doc.object().value("users").toArray();
+        History = doc.object().value("History").toArray();
         file.close();
     }
 }
 
 void Server::saveUserData()
 {
-    QFile file("D:/Qt/temp2OfProject/users.json");
+    QFile file("D:/Qt/temp3OfProject/users.json");
     if (file.open(QIODevice::WriteOnly)) {
         QJsonObject obj;
         obj["users"] = users;
@@ -78,10 +78,10 @@ void Server::saveUserData()
     }
 }
 void Server:: saveHistory(){
-    QFile file("D:/Qt/temp2OfProject/history.json");
+    QFile file("D:/Qt/temp3OfProject/history.json");
     if (file.open(QIODevice::WriteOnly)) {
         QJsonObject obj;
-        obj["users"] = History;
+        obj["History"] = History;
         QJsonDocument doc(obj);
         file.write(doc.toJson());
         file.close();
@@ -196,10 +196,15 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
         }
     }else if (command == "ADD_HISTORY"){
         QString username = parts[1];
-        QString harif = parts[2];
+        QString opponent = parts[2];
         QString time = parts[3];
-        QString role = parts[4];
-        QString winner = parts[5];
+        QString role1 = parts[4];
+        QString winner1 = parts[5];
+        QString role2 = parts[6];
+        QString winner2 = parts[7];
+        QString role3 = parts[8];
+        QString winner3 = parts[9];
+        QString winner = parts[10];
         bool exist = false;
         for (auto it = users.begin();it!=users.end();it++) {
             QJsonObject obj = (*it).toObject();
@@ -215,20 +220,25 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
         exist = false;
         for (auto it = users.begin();it!=users.end();it++) {
             QJsonObject obj = (*it).toObject();
-            if (obj["username"].toString() == harif) {
+            if (obj["username"].toString() == opponent) {
                 exist = true;
                 break;
             }
         }
         if(!exist){
-            qDebug() << "Username of harif Does'nt Exist to Have Histoy";
+            qDebug() << "Username of opponent Does'nt Exist to Have Histoy";
             return;
         }
         QJsonObject obj;
         obj["username"] = username;
-        obj["harif"] = harif;
+        obj["opponent"] = opponent;
         obj["time"] = time;
-        obj["role"] = role;
+        obj["role1"] = role1;
+        obj["winner1"] = winner1;
+        obj["role2"] = role2;
+        obj["winner2"] = winner2;
+        obj["role3"] = role3;
+        obj["winner3"] = winner3;
         obj["winner"] = winner;
         History.append(obj);
         saveHistory();
@@ -270,30 +280,35 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
                 obj["username"] = newusername;
                 *it = obj;
             }
-            if(obj["harif"].toString() == username){
-                obj["harif"] = newusername;
+            if(obj["opponent"].toString() == username){
+                obj["opponent"] = newusername;
                 *it = obj;
             }
         }
         saveHistory();
-        stream << "InformationChanged" << " " << newusername;
+        stream << "InformationChanged" << "|" << newusername;
     }else if(command == "SHOW_HISTORY"){
         QString username = parts[1];
-        QFile file("D:/Qt/temp2OfProject/history.json");
+        QFile file("D:/Qt/temp3OfProject/history.json");
         file.open(QIODevice::ReadOnly);
         QByteArray data = file.readAll();
         QJsonDocument doc(QJsonDocument::fromJson(data));
         QJsonObject jsonObject = doc.object();
-        QJsonArray usersArray = jsonObject["users"].toArray();
+        QJsonArray usersArray = jsonObject["History"].toArray();
         QString history;
         for (const QJsonValue &value : usersArray) {
             QJsonObject userObj = value.toObject();
             if (userObj["username"].toString() == username) {
-                history.append("Opponent: " + userObj["harif"].toString() + "\n");
-                history.append("Role: " + userObj["role"].toString() + "\n");
+                history.append("Opponent: " + userObj["opponent"].toString() + "\n");
                 history.append("Time: " + userObj["time"].toString() + "\n");
-                history.append("Winner: " + userObj["winner"].toString() + "\n");
-                history.append("-------------------------------\n");
+                history.append("Role in Round One: " + userObj["role1"].toString() + "\n");
+                history.append("Winner Of Round One: " + userObj["winner1"].toString() + "\n");
+                history.append("Role in Round Two: " + userObj["role2"].toString() + "\n");
+                history.append("Winner Of Round Two: " + userObj["winner2"].toString() + "\n");
+                history.append("Role in Round Three: " + userObj["role3"].toString() + "\n");
+                history.append("Winner Of Round Three: " + userObj["winner3"].toString() + "\n");
+                history.append("The Winner Of The Match : " + userObj["winner"].toString() + "\n");
+                history.append("----------------------------------------------------\n");
             }
         }
         stream << "ShowHistory|"<<history;
