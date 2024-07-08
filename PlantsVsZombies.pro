@@ -12,6 +12,7 @@ SOURCES += \
     changeaccountinformation.cpp \
     client.cpp \
     forgotpassword.cpp \
+    letsplay.cpp \
     main.cpp \
     plants.cpp \
     server.cpp \
@@ -25,6 +26,7 @@ HEADERS += \
     changeaccountinformation.h \
     client.h \
     forgotpassword.h \
+    letsplay.h \
     plants.h \
     server.h \
     showhistory.h \
@@ -36,6 +38,7 @@ FORMS += \
     Menu.ui \
     changeaccountinformation.ui \
     forgotpassword.ui \
+    letsplay.ui \
     plants.ui \
     showhistory.ui \
     signupdialog.ui \

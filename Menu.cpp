@@ -3,6 +3,7 @@
 #include "changeaccountinformation.h"
 #include <QMessageBox>
 #include "showhistory.h"
+#include "letsplay.h"
 Menu::Menu(Client* c,QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::Menu)
@@ -20,12 +21,16 @@ Menu::~Menu()
 
 void Menu::GetOrderOfClient(QString order)
 {
-    if (order == "ChangeInformationError"){
-
-    }else if (order == "InformationChanged"){
-        QMessageBox::critical(nullptr, "Login ERROR", "Username Or Password is Wrong");
-    }else if (order == ""){
-
+    QStringList parts = order.split("|");
+    if(parts[0] == "LetsPlay"){
+        LetsPlay* letsplay = new LetsPlay(player,parts[1]);
+        letsplay->show();
+    }
+    else if(order == "MatchStarted"){
+        // start the game
+    }
+    else if(order == "MatchStartRefused"){
+        QMessageBox::critical(nullptr, "Match Start ERROR", "Other Player Refused To Play");
     }
 }
 
@@ -38,7 +43,7 @@ void Menu::on_pushButton_4_clicked()
 
 void Menu::on_pushButton_clicked()
 {
-
+    player->SendMessage("LetsPlay|"+player->Username);
 }
 
 

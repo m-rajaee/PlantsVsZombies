@@ -13,6 +13,13 @@
             "password": "8fbe8e13a025185501f49e0fbefc071711b2b78dfc3f2e31dd75747e19fa0f42",
             "phone": "09352226435",
             "username": "user2"
+        },
+        {
+            "email": "user3@gmail.com",
+            "name": "MMM",
+            "password": "d48b9943c97a1cc654ec36b968d1158a9be20adcb2a8622b0289587ff09fee8f",
+            "phone": "09876543210",
+            "username": "user3"
         }
     ]
 }
