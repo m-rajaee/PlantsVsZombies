@@ -3,6 +3,7 @@
 #include <QGraphicsScene>
 #include "zombie.h"
 Bullet::Bullet(int attackPower) {
+    isBoomreng = false;
     AttackPower = attackPower;
     setRect(0,0,30,30);
     setBrush(QBrush(Qt::green));
@@ -22,9 +23,11 @@ void Bullet::move()
                 scene()->removeItem(zombie);
                 delete zombie;
             }
+            if(!isBoomreng){
             scene()->removeItem(this);
             delete this;
             return;
+            }
         }
     }
     // moving bullet to the right

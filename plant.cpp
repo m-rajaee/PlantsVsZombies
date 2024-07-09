@@ -81,6 +81,8 @@ void Plant::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void Plant::shoot() {
     Bullet* bullet = new Bullet(attackPower);
+    if(type == Boomerang)
+        bullet->isBoomreng = true;
     bullet->setPos(x(),y());
     scene()->addItem(bullet);
 }
