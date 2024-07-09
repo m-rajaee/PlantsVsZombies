@@ -2,8 +2,12 @@
 #include <QTextStream>
 #include <QDebug>
 #include<QDateTime>
+#include "plantgame.h"
+#include "zombiegame.h"
 Client::Client(QObject *parent) : QObject(parent), socket(new QTcpSocket(this))
 {
+    wins = 0;
+    round = 1;
     connect(socket, &QTcpSocket::readyRead, this, &Client::onReadyRead);
     connect(this,SIGNAL(Order(QString)),this,SLOT(getOrder(QString)));
 }
@@ -45,12 +49,12 @@ void Client::resetPassword(const QString &phone, const QString &newPassword)
     }
 }
 
-void Client::addHistory(const QString& username,const QString& opponent,const QString& role1,const QString& winner1,const QString& role2,const QString& winner2,const QString& role3 ,const QString& winner3,const QString& winner)
+void Client::addHistory(const QString& username,const QString& opponent,const QString& role1,const QString& winner1,const QString& role2,const QString& winner2,const QString& winner)
 {
     if (socket->state() == QTcpSocket::ConnectedState) {
         QTextStream stream(socket);
         QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd,hh:mm:ss");
-        stream << "ADD_HISTORY|" << username << "|" << opponent << "|" << time << "|" << role1 << "|" << winner1 << "|" << role2 << "|" << winner2 << "|" << role3 << "|" << winner3 << "|" << winner;
+        stream << "ADD_HISTORY|" << username << "|" << opponent << "|" << time << "|" << role1 << "|" << winner1 << "|" << role2 << "|" << winner2 << "|" << winner;
         socket->flush();
     }
 }
@@ -100,6 +104,39 @@ void Client::getOrder(QString order)
         Username = parts[1];
     }else if(parts[0] == "InformationChanged"){
         Username = parts[1];
+    }else if(parts[0] == "Oponnent"){
+        data.opponent = parts[1];
+    }else if(parts[0] == "StartTheMatch"){
+        SendMessage("Oponnent|"+Username);
+        if(parts[1] == "Plant"){
+            data.role1 = "Plant"; data.role2 = "Zombie";
+            PlantGame * plantgame = new PlantGame(this);
+        }else if(parts[1] == "Zombie"){
+            data.role1 = "Zombie"; data.role2 = "Plant";
+            ZombieGame* zombiegame = new ZombieGame(this);
+        }
+    }else if(parts[0] == "Round1Finished"){
+        round++;
+        data.winner1 = parts[1];
+        if(data.winner1 == Username)
+            wins++;
+        if(data.role2 == "Zombie")
+            ZombieGame* zombiegame = new ZombieGame(this);
+        else if(data.role2 == "Plant")
+            PlantGame * plantgame = new PlantGame(this);
+    }else if(parts[0] == "Round2Finished"){
+        data.winner2 = parts[1];
+        if(data.winner2 == Username)
+            wins++;
+        if(wins == 0)
+            data.winner = data.opponent;
+        else if(wins == 1)
+            data.winner = "Draw";
+        else if(wins ==2)
+            data.winner = Username;
+        addHistory(Username,data.opponent,data.role1,data.winner1,data.role2,data.winner2,data.winner);
+        wins = 0; round = 1;
+        emit MatchFinished();
     }
 }
 

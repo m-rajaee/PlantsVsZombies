@@ -14,7 +14,8 @@ class LetsPlay : public QDialog
 public:
     explicit LetsPlay(Client* c,QString Oponnent,QWidget *parent = nullptr);
     ~LetsPlay();
-
+signals:
+    void GameStarted();
 private slots:
     void on_pushButton_2_clicked();
     void on_pushButton_clicked();

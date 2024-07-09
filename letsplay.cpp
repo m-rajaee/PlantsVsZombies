@@ -26,6 +26,7 @@ void LetsPlay::on_pushButton_2_clicked()
 void LetsPlay::on_pushButton_clicked()
 {
     player->SendMessage("MatchStarted");
+    emit GameStarted();
     this->close();
 }
 

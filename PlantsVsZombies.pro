@@ -9,29 +9,43 @@ CONFIG += c++17
 SOURCES += \
     Authorization.cpp \
     Menu.cpp \
+    bullet.cpp \
     changeaccountinformation.cpp \
     client.cpp \
     forgotpassword.cpp \
     letsplay.cpp \
     main.cpp \
-    plants.cpp \
+    mouse.cpp \
+    plant.cpp \
+    plantcard.cpp \
+    plantgame.cpp \
+    resource.cpp \
     server.cpp \
     showhistory.cpp \
     signupdialog.cpp \
-    zombies.cpp
+    zombie.cpp \
+    zombiecard.cpp \
+    zombiegame.cpp
 
 HEADERS += \
     Authorization.h \
     Menu.h \
+    bullet.h \
     changeaccountinformation.h \
     client.h \
     forgotpassword.h \
     letsplay.h \
-    plants.h \
+    mouse.h \
+    plant.h \
+    plantcard.h \
+    plantgame.h \
+    resource.h \
     server.h \
     showhistory.h \
     signupdialog.h \
-    zombies.h
+    zombie.h \
+    zombiecard.h \
+    zombiegame.h
 
 FORMS += \
     Authorization.ui \
@@ -39,12 +53,13 @@ FORMS += \
     changeaccountinformation.ui \
     forgotpassword.ui \
     letsplay.ui \
-    plants.ui \
     showhistory.ui \
-    signupdialog.ui \
-    zombies.ui
+    signupdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    Resource.qrc

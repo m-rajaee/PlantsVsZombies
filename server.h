@@ -13,7 +13,7 @@ class Server : public QTcpServer
 
 public:
     Server(QObject *parent = nullptr);
-
+    void broadcastMessage(const QString &message);
 
 protected:
     void incomingConnection(qintptr socketDescriptor) override;

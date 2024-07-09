@@ -12,6 +12,7 @@ Menu::Menu(Client* c,QWidget *parent)
     player = c;
     connect(player,SIGNAL(Order(QString)),this,SLOT(GetOrderOfClient(QString)));
     ui->label->setText("Welcome To The Game, "+player->Username);
+    connect(player,SIGNAL(MatchFinished()),this,SLOT(MatchFinished()));
 }
 
 Menu::~Menu()
@@ -24,10 +25,13 @@ void Menu::GetOrderOfClient(QString order)
     QStringList parts = order.split("|");
     if(parts[0] == "LetsPlay"){
         LetsPlay* letsplay = new LetsPlay(player,parts[1]);
+        connect(letsplay,SIGNAL(GameStarted()),this,SLOT(gameStarted()));
         letsplay->show();
+    }else if(parts[0] == "StartTheMatch"){
+        this->close();
     }
     else if(order == "MatchStarted"){
-        // start the game
+        this->close();
     }
     else if(order == "MatchStartRefused"){
         QMessageBox::critical(nullptr, "Match Start ERROR", "Other Player Refused To Play");
@@ -58,5 +62,15 @@ void Menu::on_pushButton_3_clicked()
 {
     ShowHistory* showhistroy = new ShowHistory(player);
     showhistroy->show();
+}
+
+void Menu::gameStarted()
+{
+    this->close();
+}
+
+void Menu::MatchFinished()
+{
+    this->show();
 }
 

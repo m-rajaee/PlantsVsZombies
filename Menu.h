@@ -23,6 +23,8 @@ private slots:
     void on_pushButton_2_clicked();
 
     void on_pushButton_3_clicked();
+    void gameStarted();
+    void MatchFinished();
 
 signals:
     void Back();

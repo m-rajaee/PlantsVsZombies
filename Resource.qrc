@@ -1,0 +1,33 @@
+<RCC>
+    <qresource prefix="/">
+        <file>image/astronaut zombie.jpg</file>
+        <file>image/astronaut zombie_transparent.png</file>
+        <file>image/boomerang.jpg</file>
+        <file>image/boomrang_transparent.png</file>
+        <file>image/Brain.png</file>
+        <file>image/Bucket head zombie.jpg</file>
+        <file>image/Bucket head zombie_trasparent.png</file>
+        <file>image/BucketheadZombie.gif</file>
+        <file>image/bullet.jpg</file>
+        <file>image/filed.png</file>
+        <file>image/jalapino.jpg</file>
+        <file>image/jalapino_transparent.png</file>
+        <file>image/leaf hair zombie.jpg</file>
+        <file>image/leaf hair zombie_transparent.png</file>
+        <file>image/pea shooter.jpg</file>
+        <file>image/peashooter transparent.png</file>
+        <file>image/plum mine.jpg</file>
+        <file>image/plum mine_transparent.png</file>
+        <file>image/purple hair zombie.jpg</file>
+        <file>image/purple hair zombie_transparent.png</file>
+        <file>image/regular zombie.jpg</file>
+        <file>image/regular zombie_transparent.png</file>
+        <file>image/sun.png</file>
+        <file>image/tall zombie.jpg</file>
+        <file>image/tall zombie_transparent.png</file>
+        <file>image/two_peashooter.jpg</file>
+        <file>image/two_peashooter_transparent.png</file>
+        <file>image/walnut.jpg</file>
+        <file>image/walnut_transparent.png</file>
+    </qresource>
+</RCC>

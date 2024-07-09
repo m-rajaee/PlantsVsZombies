@@ -13,6 +13,15 @@ Server::Server(QObject *parent) : QTcpServer(parent)
     }
 }
 
+void Server::broadcastMessage(const QString &message)
+{
+    for(auto client : clients){
+            QTextStream clientsream(client);
+            clientsream << message;
+            client->flush();
+    }
+}
+
 void Server::incomingConnection(qintptr socketDescriptor)
 {
     QTcpSocket *socket = new QTcpSocket(this);
@@ -202,9 +211,7 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
         QString winner1 = parts[5];
         QString role2 = parts[6];
         QString winner2 = parts[7];
-        QString role3 = parts[8];
-        QString winner3 = parts[9];
-        QString winner = parts[10];
+        QString winner = parts[8];
         bool exist = false;
         for (auto it = users.begin();it!=users.end();it++) {
             QJsonObject obj = (*it).toObject();
@@ -237,8 +244,6 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
         obj["winner1"] = winner1;
         obj["role2"] = role2;
         obj["winner2"] = winner2;
-        obj["role3"] = role3;
-        obj["winner3"] = winner3;
         obj["winner"] = winner;
         History.append(obj);
         saveHistory();
@@ -251,12 +256,12 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
         QString newphone = parts[5];
         QString newemail = parts[6];
         bool exist = false;
-            for(auto it = users.begin();it!=users.end();it++){
+        for(auto it = users.begin();it!=users.end();it++){
             QJsonObject obj = (*it).toObject();
             if (obj["username"].toString() == newusername) {
                 exist = true;
             }
-            }
+        }
         if (exist) {
             stream << "ChangeInformationError";
             return;
@@ -305,13 +310,29 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
                 history.append("Winner Of Round One: " + userObj["winner1"].toString() + "\n");
                 history.append("Role in Round Two: " + userObj["role2"].toString() + "\n");
                 history.append("Winner Of Round Two: " + userObj["winner2"].toString() + "\n");
-                history.append("Role in Round Three: " + userObj["role3"].toString() + "\n");
-                history.append("Winner Of Round Three: " + userObj["winner3"].toString() + "\n");
                 history.append("The Winner Of The Match : " + userObj["winner"].toString() + "\n");
                 history.append("----------------------------------------------------\n");
             }
         }
         stream << "ShowHistory|"<<history;
+    }else if(request == "MatchStarted"){
+        QTcpSocket* player1 = *(clients.begin());
+        QTcpSocket* player2 = *(++(clients.begin()));
+        srand(time(NULL)); int side = rand() % 1;
+        QTextStream player1Message(player1);
+        QTextStream player2Message(player2);
+        if(side == 0){
+            player1Message << "StartTheMatch|Plant";
+            player2Message << "StartTheMatch|Zombie";
+        }else if(side ==1){
+            player1Message << "StartTheMatch|Zombie";
+            player2Message << "StartTheMatch|Plant";
+        }
+        player1->flush(); player2->flush(); return;
+    }else if(parts[0] == "Round1Finished"){
+        broadcastMessage(request);
+    }else if(parts[0] == "Round2Finished"){
+        broadcastMessage(request);
     }
     else {
         //Sending Request(Message) To other clients
@@ -320,8 +341,8 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
                 QTextStream clientsream(clientsocket);
                 clientsream << request;
                 clientsocket->flush();
+            }
         }
-    }
     }
     socket->flush();
 }

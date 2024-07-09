@@ -1,28 +1,24 @@
 {
     "History": [
         {
-            "opponent": "user2",
+            "opponent": "user3",
             "role1": "Plant",
             "role2": "Zombie",
-            "role3": "Plant",
-            "time": "2024-07-07,23:38:32",
-            "username": "user1",
-            "winner": "user1",
-            "winner1": "user1",
-            "winner2": "user1",
-            "winner3": "user1"
+            "time": "2024-07-09,22:35:18",
+            "username": "user2",
+            "winner": "Draw",
+            "winner1": "user3",
+            "winner2": "user2"
         },
         {
-            "opponent": "user1",
+            "opponent": "user2",
             "role1": "Zombie",
             "role2": "Plant",
-            "role3": "Zombie",
-            "time": "2024-07-07,23:38:32",
-            "username": "user2",
-            "winner": "user1",
-            "winner1": "user1",
-            "winner2": "user1",
-            "winner3": "user1"
+            "time": "2024-07-09,22:35:18",
+            "username": "user3",
+            "winner": "Draw",
+            "winner1": "user3",
+            "winner2": "user2"
         }
     ]
 }
