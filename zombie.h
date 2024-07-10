@@ -25,6 +25,10 @@ signals:
 private slots:
     void move();
     void eat();
+    void gif();
+private:
+    QMovie* movie;
+    QTimer* giftimer;
 
 };
 

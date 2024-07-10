@@ -1,4 +1,4 @@
-QT       += core gui network
+QT       += core gui network multimedia
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
@@ -23,6 +23,7 @@ SOURCES += \
     server.cpp \
     showhistory.cpp \
     signupdialog.cpp \
+    start.cpp \
     zombie.cpp \
     zombiecard.cpp \
     zombiegame.cpp
@@ -43,6 +44,7 @@ HEADERS += \
     server.h \
     showhistory.h \
     signupdialog.h \
+    start.h \
     zombie.h \
     zombiecard.h \
     zombiegame.h
@@ -54,7 +56,8 @@ FORMS += \
     forgotpassword.ui \
     letsplay.ui \
     showhistory.ui \
-    signupdialog.ui
+    signupdialog.ui \
+    start.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -62,4 +65,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
-    Resource.qrc
+    Resource.qrc \
+    background.qrc \
+    bg.qrc \
+    loginbg.qrc \
+    menu.qrc

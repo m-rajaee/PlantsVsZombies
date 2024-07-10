@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/mymenu">
+        <file>menu/Buckethead_Zombie.webp</file>
+        <file>menu/cactus.png.adapt.crop16x9.png</file>
+        <file>menu/Newspaper_Zombie.webp</file>
+    </qresource>
+</RCC>

@@ -3,7 +3,6 @@
 #include "signupdialog.h"
 #include "Menu.h"
 #include "ui_Authorization.h"
-
 Authorization::Authorization(Client* c,QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::Authorization)

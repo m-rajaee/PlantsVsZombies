@@ -1,6 +1,11 @@
 #include "zombiegame.h"
 #include<QGraphicsItem>
+#include <QSoundEffect>
 ZombieGame::ZombieGame(Client* c) {
+    QSoundEffect* Sound = new QSoundEffect();
+    Sound->setSource(QUrl::fromLocalFile(":/audio/Playing.wav"));
+    Sound->setVolume(0.2);
+    Sound->play();
     brain = 0;
     seconds = 210;
     player = c;
@@ -110,6 +115,10 @@ void ZombieGame::CollectResource()
 
 void ZombieGame::Won()
 {
+    QSoundEffect* Sound = new QSoundEffect();
+    Sound->setSource(QUrl::fromLocalFile(":/audio/ZombieWon.wav"));
+    Sound->setVolume(0.4);
+    Sound->play();
     player->SendMessage("Round"+QString::number(player->round)+"Finished|"+player->Username);
     this->close();
     delete this;
@@ -127,6 +136,7 @@ void ZombieGame::setSelectedCart(ZombieCard *selectedcard)
 
 void ZombieGame::clicked(QPointF clickedplace)
 {
+    qDebug() << clickedplace;
     int cardprice;
     QString order;
     if(SelectedCard){
@@ -171,7 +181,7 @@ void ZombieGame::clicked(QPointF clickedplace)
                 y=i; break;
             }
         }
-        x+=130; y+=100;
+        x+=110; y+=87;
         player->SendMessage(order+"|"+QString::number(x)+"|"+QString::number(y));
         QPointF place(x,y);
         brain -= cardprice;

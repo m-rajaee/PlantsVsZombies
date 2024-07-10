@@ -8,6 +8,11 @@ Menu::Menu(Client* c,QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::Menu)
 {
+    MenuSound = new QSoundEffect();
+    MenuSound->setSource(QUrl::fromLocalFile(":/audio/Menu.wav"));
+    MenuSound->setVolume(0.4);
+    MenuSound->play();
+    MenuSound->setLoopCount(QSoundEffect::Infinite);
     ui->setupUi(this);
     player = c;
     connect(player,SIGNAL(Order(QString)),this,SLOT(GetOrderOfClient(QString)));
@@ -28,9 +33,11 @@ void Menu::GetOrderOfClient(QString order)
         connect(letsplay,SIGNAL(GameStarted()),this,SLOT(gameStarted()));
         letsplay->show();
     }else if(parts[0] == "StartTheMatch"){
+        MenuSound->stop();
         this->close();
     }
     else if(order == "MatchStarted"){
+        MenuSound->stop();
         this->close();
     }
     else if(order == "MatchStartRefused"){
@@ -41,6 +48,7 @@ void Menu::GetOrderOfClient(QString order)
 void Menu::on_pushButton_4_clicked()
 {
     emit Back();
+    MenuSound->stop();
     this->close();
 }
 
@@ -66,11 +74,13 @@ void Menu::on_pushButton_3_clicked()
 
 void Menu::gameStarted()
 {
+    MenuSound->stop();
     this->close();
 }
 
 void Menu::MatchFinished()
 {
+    MenuSound->play();
     this->show();
 }
 

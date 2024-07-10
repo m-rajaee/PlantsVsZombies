@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/backgrounds">
+        <file>gifs/92e6836836945a6039bb02ad1be20366.gif</file>
+        <file>gifs/541f044044771e42a379c61b94f89419.gif</file>
+        <file>gifs/A_PVZH_P_WallKnight@3x.webp</file>
+        <file>gifs/d39utts-5a43c0a9-f252-40fd-a17a-36ab5212464a.png</file>
+        <file>gifs/e4543f31b640f2868d5c419f9710dcff.gif</file>
+        <file>gifs/Plants-vs-Zombies_2.webp</file>
+        <file>gifs/plants-vs-zombies-background-egoosv8divp2o19x.jpg</file>
+        <file>gifs/plants-vs-zombies-background-i7pf3vxoaxm1mhyw.jpg</file>
+        <file>gifs/Webp.net-gifmaker_(3).webp</file>
+    </qresource>
+</RCC>

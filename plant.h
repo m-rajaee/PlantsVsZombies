@@ -4,7 +4,7 @@
 #include <QGraphicsPixmapItem>
 #include <QTimer>
 #include <QObject>
-
+#include <QMovie>
 class Plant : public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
 public:
@@ -25,9 +25,11 @@ private slots:
     void shoot();
     void JalapenoExplode();
     void PlumMineExplode();
+    void gif();
 signals:
-
-
+private:
+    QMovie* movie;
+    QTimer* giftimer;
 };
 
 #endif // PLANT_H

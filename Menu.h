@@ -2,7 +2,7 @@
 #define MENU_H
 #include "client.h"
 #include <QDialog>
-
+#include <QSoundEffect>
 namespace Ui {
 class Menu;
 }
@@ -31,6 +31,7 @@ signals:
 private:
     Ui::Menu *ui;
     Client* player;
+    QSoundEffect* MenuSound;
 };
 
 #endif // MENU_H

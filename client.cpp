@@ -12,13 +12,15 @@ Client::Client(QObject *parent) : QObject(parent), socket(new QTcpSocket(this))
     connect(this,SIGNAL(Order(QString)),this,SLOT(getOrder(QString)));
 }
 
-void Client::connectToServer(const QString &host, quint16 port)
+bool Client::connectToServer(const QString &host, quint16 port)
 {
     socket->connectToHost(host, port);
     if (socket->waitForConnected(1000)) {
         qDebug() << "Connected to server!";
+        return true;
     } else {
         qDebug() << "Connection failed!";
+        return false;
     }
 }
 
@@ -104,10 +106,7 @@ void Client::getOrder(QString order)
         Username = parts[1];
     }else if(parts[0] == "InformationChanged"){
         Username = parts[1];
-    }else if(parts[0] == "Oponnent"){
-        data.opponent = parts[1];
     }else if(parts[0] == "StartTheMatch"){
-        SendMessage("Oponnent|"+Username);
         if(parts[1] == "Plant"){
             data.role1 = "Plant"; data.role2 = "Zombie";
             PlantGame * plantgame = new PlantGame(this);

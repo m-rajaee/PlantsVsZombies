@@ -63,6 +63,7 @@ void Server::loadUserData()
         QJsonDocument doc = QJsonDocument::fromJson(data);
         users = doc.object().value("users").toArray();
         file.close();
+        qDebug() << "Loaded";
     }
 }
 void Server::loadHistory(){

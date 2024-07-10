@@ -2,10 +2,10 @@
 #include <QTimer>
 #include <QGraphicsScene>
 #include "zombie.h"
+//#include "sound.h"
 Bullet::Bullet(int attackPower) {
-    isBoomreng = false;
     AttackPower = attackPower;
-    setRect(0,0,30,30);
+    setRect(0,0,25,25);
     setBrush(QBrush(Qt::green));
     QTimer* timer = new QTimer();
     connect(timer,SIGNAL(timeout()),SLOT(move()));
@@ -23,11 +23,9 @@ void Bullet::move()
                 scene()->removeItem(zombie);
                 delete zombie;
             }
-            if(!isBoomreng){
             scene()->removeItem(this);
             delete this;
             return;
-            }
         }
     }
     // moving bullet to the right

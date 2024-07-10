@@ -1,7 +1,20 @@
 #include "Zombie.h"
 #include "plant.h"
 #include <QGraphicsScene>
+#include <QSoundEffect>
 Zombie::Zombie(ZombieType type, QGraphicsItem *parent) : QGraphicsPixmapItem(parent), type(type) {
+    srand(time(NULL)); int a = rand()%4;
+    QSoundEffect* Sound = new QSoundEffect();
+    if(a == 0)
+        Sound->setSource(QUrl::fromLocalFile(":/audio/groan3.wav"));
+    else if(a == 1)
+        Sound->setSource(QUrl::fromLocalFile(":/audio/groan4.wav"));
+    else if(a == 2)
+        Sound->setSource(QUrl::fromLocalFile(":/audio/groan5.wav"));
+    else if(a == 3)
+        Sound->setSource(QUrl::fromLocalFile(":/audio/groan6.wav"));
+    Sound->setVolume(0.4);
+    Sound->play();
     setFlag(QGraphicsItem::ItemIsFocusable);
     setFocus();
     isEating = false;
@@ -10,13 +23,20 @@ Zombie::Zombie(ZombieType type, QGraphicsItem *parent) : QGraphicsPixmapItem(par
         movementDelay = 1;
         attackPower = 80;
         timeBetweenAttack = 1;
-        setPixmap(QPixmap(":/image/regular zombie_transparent.png"));
+        giftimer = new QTimer();
+        movie = new QMovie(":/gif/Regular.gif");
+        movie->start();
+        connect(giftimer,SIGNAL(timeout()),this,SLOT(gif()));
+        giftimer->start(1);
     } else if (type == BucketHead) {
         health = 1950;
         movementDelay = 2;
         attackPower = 100;
         timeBetweenAttack = 1;
-        setPixmap(QPixmap(":/image/Bucket head zombie_trasparent.png"));
+        giftimer = new QTimer();
+        movie = new QMovie(":/gif/Buckethead.gif");
+        movie->start();
+        connect(giftimer,SIGNAL(timeout()),this,SLOT(gif()));
     }
     else if (type == LeafHead) {
         health = 800;
@@ -46,12 +66,17 @@ Zombie::Zombie(ZombieType type, QGraphicsItem *parent) : QGraphicsPixmapItem(par
         timeBetweenAttack = 0.5;
         setPixmap(QPixmap(":/image/purple hair zombie_transparent.png"));
     }
-    setScale(0.065);
+    if(type == BucketHead)
+        setScale(3);
+    else if(type == Regular)
+        setScale(0.65);
+    else
+        setScale(0.075);
     moveTimer = new QTimer();
     AttackTimer = new QTimer();
     connect(AttackTimer, &QTimer::timeout, this, &Zombie::eat);
     connect(moveTimer, &QTimer::timeout, this, &Zombie::move);
-    moveTimer->start(movementDelay*1000);
+    moveTimer->start(movementDelay*100);
     AttackTimer->start(timeBetweenAttack*1000);
 }
 
@@ -59,12 +84,12 @@ void Zombie::move() {
     QList<QGraphicsItem *> collidingItems = scene()->collidingItems(this);
     for (QGraphicsItem *item : collidingItems) {
         if (Plant *plant = dynamic_cast<Plant *>(item)) {
-            isEating = true;
-            return;
+                isEating = true;
+                return;
     }
     }
     isEating = false;
-    setPos(x()-18,y());
+    setPos(x()-3.7,y());
     if(x() <= 120){
         emit zombieWon();
         return;
@@ -74,6 +99,10 @@ void Zombie::move() {
 void Zombie::eat()
 {
     if(!isEating) return;
+    QSoundEffect* Sound = new QSoundEffect();
+    Sound->setSource(QUrl::fromLocalFile(":/audio/Khordan.wav"));
+    Sound->setVolume(0.5);
+    Sound->play();
     QList<QGraphicsItem *> collidingItems = scene()->collidingItems(this);
     for (QGraphicsItem *item : collidingItems) {
         if (Plant *plant = dynamic_cast<Plant *>(item)) {
@@ -86,4 +115,9 @@ void Zombie::eat()
             return;
         }
     }
+}
+
+void Zombie::gif()
+{
+    setPixmap(movie->currentPixmap());
 }

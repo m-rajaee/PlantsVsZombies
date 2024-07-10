@@ -1,5 +1,32 @@
 <RCC>
     <qresource prefix="/">
+        <file>audio/BucketHead barkhord ba ahan.wav</file>
+        <file>audio/BuyError.wav</file>
+        <file>audio/Collecting Sun.wav</file>
+        <file>audio/groan3.wav</file>
+        <file>audio/groan4.wav</file>
+        <file>audio/groan5.wav</file>
+        <file>audio/groan6.wav</file>
+        <file>audio/JalapenoExplode.wav</file>
+        <file>audio/Kasht.wav</file>
+        <file>audio/Khordan.wav</file>
+        <file>audio/Menu.wav</file>
+        <file>audio/PlantWon.wav</file>
+        <file>audio/PlumMine.wav</file>
+        <file>audio/PlumMineExplode.wav</file>
+        <file>audio/splat1.wav</file>
+        <file>audio/splat2.wav</file>
+        <file>audio/splat3.wav</file>
+        <file>audio/ZombieWon.wav</file>
+        <file>gif/Boom.gif</file>
+        <file>gif/Buckethead.gif</file>
+        <file>gif/BucketheadEating.gif</file>
+        <file>gif/JalapenoAttack.gif</file>
+        <file>gif/Peashooter.gif</file>
+        <file>gif/Regular.gif</file>
+        <file>gif/RegularEating.gif</file>
+        <file>gif/Repeater.gif</file>
+        <file>gif/WallNut.gif</file>
         <file>image/astronaut zombie.jpg</file>
         <file>image/astronaut zombie_transparent.png</file>
         <file>image/boomerang.jpg</file>
@@ -28,5 +55,6 @@
         <file>image/two_peashooter_transparent.png</file>
         <file>image/walnut.jpg</file>
         <file>image/walnut_transparent.png</file>
+        <file>audio/Playing.wav</file>
     </qresource>
 </RCC>

@@ -7,59 +7,97 @@ Plant::Plant(PlantType type, QGraphicsItem *parent) : QGraphicsPixmapItem(parent
     setFlag(QGraphicsItem::ItemIsFocusable);
     setFocus();
     if (type == PeaShooter) {
-        setPixmap(QPixmap(":/image/peashooter transparent.png"));
         health = 200;
         firingRate = 2;
-        attackPower = 150;
+        attackPower = 75;
         shootTimer = new QTimer();
         connect(shootTimer, &QTimer::timeout, this, &Plant::shoot);
         shootTimer->start(firingRate*1000);
+        giftimer = new QTimer();
+        movie = new QMovie(":/gif/Peashooter.gif");
+        movie->start();
+        connect(giftimer,SIGNAL(timeout()),this,SLOT(gif()));
+        giftimer->start(1);
     } else if (type == TwoPeaShooter) {
-        setPixmap(QPixmap(":/image/two_peashooter_transparent.png"));
         health = 200;
         firingRate = 1;
-        attackPower = 400;
+        attackPower = 120;
         shootTimer = new QTimer();
         connect(shootTimer, &QTimer::timeout, this, &Plant::shoot);
         shootTimer->start(firingRate*1000);
+        giftimer = new QTimer();
+        movie = new QMovie(":/gif/Repeater.gif");
+        movie->start();
+        connect(giftimer,SIGNAL(timeout()),this,SLOT(gif()));
+        giftimer->start(1);
     }
     else if (type == Walnut) {
-        setPixmap(QPixmap(":/image/walnut_transparent.png"));
         health = 400;
         firingRate = 0;
         attackPower = 0;
+        giftimer = new QTimer();
+        movie = new QMovie(":/gif/WallNut.gif");
+        movie->start();
+        connect(giftimer,SIGNAL(timeout()),this,SLOT(gif()));
+        giftimer->start(1);
     }
     else if (type == PlumMine) {
-        setPixmap(QPixmap(":/image/plum mine_transparent.png"));
         health = 2000;
         firingRate = 0;
         attackPower = 5000;
         shootTimer = new QTimer();
         connect(shootTimer, &QTimer::timeout, this, &Plant::PlumMineExplode);
-        shootTimer->start(2500);
+        shootTimer->start(3500);
+        giftimer = new QTimer();
+        movie = new QMovie(":/gif/Boom.gif");
+        movie->start();
+        connect(giftimer,SIGNAL(timeout()),this,SLOT(gif()));
+        giftimer->start(50);
     }
     else if (type == Jalapeno) {
-        setPixmap(QPixmap(":/image/jalapino_transparent.png"));
         health = 2000;
         firingRate = 0;
-        attackPower = 3000;
+        attackPower = 900;
         shootTimer = new QTimer();
         connect(shootTimer, &QTimer::timeout, this, &Plant::JalapenoExplode);
-        shootTimer->start(2500);
+        shootTimer->start(3500);
+        giftimer = new QTimer();
+        movie = new QMovie(":/gif/JalapenoAttack.gif");
+        movie->start();
+        connect(giftimer,SIGNAL(timeout()),this,SLOT(gif()));
+        giftimer->start(50);
     }
     else if (type == Boomerang) {
         setPixmap(QPixmap(":/image/boomrang_transparent.png"));
+        setScale(0.2);
         health = 200;
         firingRate = 2;
-        attackPower = 300;
+        attackPower = 90;
         shootTimer = new QTimer();
         connect(shootTimer, &QTimer::timeout, this, &Plant::shoot);
         shootTimer->start(firingRate*1000);
     }
-    if(type == Boomerang)
-        setScale(0.2);
-    else
-        setScale(0.065);
+    if(type == Jalapeno){
+        QSoundEffect* Sound = new QSoundEffect();
+        Sound->setSource(QUrl::fromLocalFile(":/audio/JalapenoExplode.wav"));
+        Sound->setVolume(0.4);
+        Sound->play();
+    }else if (type == PlumMine){
+        QSoundEffect* Sound = new QSoundEffect();
+        Sound->setSource(QUrl::fromLocalFile(":/audio/PlumMine.wav"));
+        Sound->setVolume(0.4);
+        Sound->play();
+    }
+    else{
+        if(type == Boomerang)
+            setScale(0.2);
+        else
+            setScale(0.8);
+    QSoundEffect* Sound = new QSoundEffect();
+    Sound->setSource(QUrl::fromLocalFile(":/audio/Kasht.wav"));
+    Sound->setVolume(0.4);
+    Sound->play();
+    }
 }
 
 void Plant::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -81,15 +119,13 @@ void Plant::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void Plant::shoot() {
     Bullet* bullet = new Bullet(attackPower);
-    if(type == Boomerang)
-        bullet->isBoomreng = true;
-    bullet->setPos(x(),y());
+    bullet->setPos(x()+60,y());
     scene()->addItem(bullet);
 }
 
 void Plant::JalapenoExplode()
 {
-    QRectF rect(0,y()-50,scene()->width(),100);
+    QRectF rect(0,y()-50,scene()->sceneRect().width(),100);
     QList<QGraphicsItem*> items = scene()->items(rect);
     for(QGraphicsItem* item : items){
         if(Zombie* zombie = dynamic_cast<Zombie*>(item)){
@@ -101,7 +137,6 @@ void Plant::JalapenoExplode()
     }
     }
     scene()->removeItem(this);
-    shootTimer->stop();
     delete this;
 }
 
@@ -119,6 +154,10 @@ void Plant::PlumMineExplode()
         }
     }
     scene()->removeItem(this);
-    shootTimer->stop();
     delete this;
+}
+
+void Plant::gif()
+{
+    setPixmap(movie->currentPixmap());
 }

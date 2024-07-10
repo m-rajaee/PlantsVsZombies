@@ -9,13 +9,13 @@ Resource::Resource(ResourceType type) {
         timer = new QTimer();
         connect(timer, &QTimer::timeout, this, &Resource::Destroy);
         timer->start(4500);
-        setScale(0.065);
+        setScale(1.7);
     }else if(type == Brain){
         setPixmap(QPixmap(":/image/Brain.png"));
         timer = new QTimer();
         connect(timer, &QTimer::timeout, this, &Resource::Destroy);
         timer->start(4500);
-        setScale(0.15);
+        setScale(0.2);
     }
 }
 

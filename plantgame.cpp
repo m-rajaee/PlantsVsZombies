@@ -1,7 +1,12 @@
 #include "plantgame.h"
 #include "mouse.h"
 #include<QGraphicsItem>
+#include <QSoundEffect>
 PlantGame::PlantGame(Client* c) {
+    QSoundEffect* Sound = new QSoundEffect();
+    Sound->setSource(QUrl::fromLocalFile(":/audio/Playing.wav"));
+    Sound->setVolume(0.2);
+    Sound->play();
     seconds = 210;
     sun = 0;
     player = c;
@@ -55,6 +60,17 @@ PlantGame::PlantGame(Client* c) {
 
 void PlantGame::spawnZombie(Zombie::ZombieType type, int x, int y)
 {
+    QSoundEffect* Sound = new QSoundEffect(); srand(time(NULL)); int a = rand()%4;
+    if(a == 0)
+        Sound->setSource(QUrl::fromLocalFile(":/audio/groan3.wav"));
+    else if(a == 1)
+        Sound->setSource(QUrl::fromLocalFile(":/audio/groan4.wav"));
+    else if(a == 2)
+        Sound->setSource(QUrl::fromLocalFile(":/audio/groan5.wav"));
+    else if(a == 3)
+        Sound->setSource(QUrl::fromLocalFile(":/audio/groan6.wav"));
+    Sound->setVolume(0.4);
+    Sound->play();
     Zombie* zombie = new Zombie(type);
     zombie->setPos(x,y);
     scene->addItem(zombie);
@@ -86,6 +102,10 @@ void PlantGame::GetOrderOfClient(QString order)
 void PlantGame::UpdateStatus()
 {
     if(seconds <=0){
+        QSoundEffect* Sound = new QSoundEffect();
+        Sound->setSource(QUrl::fromLocalFile(":/audio/PlantWon.wav"));
+        Sound->setVolume(0.4);
+        Sound->play();
         player->SendMessage("Round"+QString::number(player->round)+"Finished|"+player->Username);
         this->close();
         delete this;
@@ -110,13 +130,21 @@ void PlantGame::AddSource()
 
 void PlantGame::CollectResource()
 {
+    QSoundEffect* Sound = new QSoundEffect();
+    Sound->setSource(QUrl::fromLocalFile(":/audio/Collecting Sun.wav"));
+    Sound->setVolume(0.4);
+    Sound->play();
     sun += 25;
 }
 
 void PlantGame::setSelectedCart(PlantCard *selectedcard)
 {
     if(selectedcard->price > sun){
-        qDebug() << "Not Enouth Sun for this item";
+        QSoundEffect* Sound = new QSoundEffect();
+        Sound->setSource(QUrl::fromLocalFile(":/audio/BuyError.wav"));
+        Sound->setVolume(0.4);
+        Sound->play();
+        qDebug() << "Not Enough Sun for this item";
         return;
     }
     SelectedCard = selectedcard;
@@ -169,7 +197,7 @@ void PlantGame::clicked(QPointF clickedplace)
                 y=i; break;
             }
         }
-        x+=130; y+=100;
+        x+=130; y+=98;
         player->SendMessage(order+"|"+QString::number(x)+"|"+QString::number(y));
         QPointF place(x,y);
         sun -= cardprice;
