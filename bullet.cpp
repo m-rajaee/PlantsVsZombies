@@ -2,8 +2,8 @@
 #include <QTimer>
 #include <QGraphicsScene>
 #include "zombie.h"
-//#include "sound.h"
 Bullet::Bullet(int attackPower) {
+    isBoomerang = false;
     AttackPower = attackPower;
     setRect(0,0,25,25);
     setBrush(QBrush(Qt::green));
@@ -23,9 +23,11 @@ void Bullet::move()
                 scene()->removeItem(zombie);
                 delete zombie;
             }
+            if(!isBoomerang){
             scene()->removeItem(this);
             delete this;
             return;
+            }
         }
     }
     // moving bullet to the right

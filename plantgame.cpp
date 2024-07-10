@@ -8,7 +8,7 @@ PlantGame::PlantGame(Client* c) {
     Sound->setVolume(0.2);
     Sound->play();
     seconds = 210;
-    sun = 0;
+    sun = 2000;
     player = c;
     SelectedCard=nullptr;
     QTimer* ResourceTimer = new QTimer();
@@ -54,6 +54,25 @@ PlantGame::PlantGame(Client* c) {
     connect(PlumMineCard,SIGNAL(Selected(PlantCard*)),this,SLOT(setSelectedCart(PlantCard*)));
     connect(TwoPeaShooterCard,SIGNAL(Selected(PlantCard*)),this,SLOT(setSelectedCart(PlantCard*)));
     connect(WalnutCard,SIGNAL(Selected(PlantCard*)),this,SLOT(setSelectedCart(PlantCard*)));
+    // Show Prices
+    QGraphicsTextItem* BoomerangCardPrice = new QGraphicsTextItem();
+    QGraphicsTextItem* JalapenoCardPrice = new QGraphicsTextItem();
+    QGraphicsTextItem* PeaShooterCardPrice = new QGraphicsTextItem();
+    QGraphicsTextItem* PlumMineCardPrice = new QGraphicsTextItem();
+    QGraphicsTextItem* TwoPeaShooterCardPrice = new QGraphicsTextItem();
+    QGraphicsTextItem* WalnutCardPrice = new QGraphicsTextItem();
+    BoomerangCardPrice->setDefaultTextColor(Qt::yellow);
+    BoomerangCardPrice->setFont(QFont("Arial",12));BoomerangCardPrice->setPlainText("125"); BoomerangCardPrice->setPos(25,80); scene->addItem(BoomerangCardPrice);
+    JalapenoCardPrice->setDefaultTextColor(Qt::yellow);
+    JalapenoCardPrice->setFont(QFont("Arial",12));JalapenoCardPrice->setPlainText("150"); JalapenoCardPrice->setPos(125,80); scene->addItem(JalapenoCardPrice);
+    PeaShooterCardPrice->setDefaultTextColor(Qt::yellow);
+    PeaShooterCardPrice->setFont(QFont("Arial",12));PeaShooterCardPrice->setPlainText("50"); PeaShooterCardPrice->setPos(225,80); scene->addItem(PeaShooterCardPrice);
+    PlumMineCardPrice->setDefaultTextColor(Qt::yellow);
+    PlumMineCardPrice->setFont(QFont("Arial",12));PlumMineCardPrice->setPlainText("175"); PlumMineCardPrice->setPos(325,80); scene->addItem(PlumMineCardPrice);
+    TwoPeaShooterCardPrice->setDefaultTextColor(Qt::yellow);
+    TwoPeaShooterCardPrice->setFont(QFont("Arial",12));TwoPeaShooterCardPrice->setPlainText("100"); TwoPeaShooterCardPrice->setPos(425,80); scene->addItem(TwoPeaShooterCardPrice);
+    WalnutCardPrice->setDefaultTextColor(Qt::yellow);
+    WalnutCardPrice->setFont(QFont("Arial",12));WalnutCardPrice->setPlainText("100"); WalnutCardPrice->setPos(525,80); scene->addItem(WalnutCardPrice);
 
     view->show(); //Showing View
 }
@@ -81,7 +100,7 @@ void PlantGame::GetOrderOfClient(QString order)
 {
     QStringList parts = order.split("|");
     if(parts[0] == "Round1Finished" || parts[0] == "Round2Finished"){
-        this->close();
+        view->close();
         delete this;
         return;
     }
@@ -107,9 +126,6 @@ void PlantGame::UpdateStatus()
         Sound->setVolume(0.4);
         Sound->play();
         player->SendMessage("Round"+QString::number(player->round)+"Finished|"+player->Username);
-        this->close();
-        delete this;
-        return;
     }
     seconds--;
     QString min = QString::number(seconds / 60);
@@ -148,7 +164,7 @@ void PlantGame::setSelectedCart(PlantCard *selectedcard)
         return;
     }
     SelectedCard = selectedcard;
-    qDebug() << "cArd Selected";
+    qDebug() << "Card Selected";
 }
 
 void PlantGame::clicked(QPointF clickedplace)

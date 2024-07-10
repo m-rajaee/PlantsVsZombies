@@ -37,6 +37,7 @@ Zombie::Zombie(ZombieType type, QGraphicsItem *parent) : QGraphicsPixmapItem(par
         movie = new QMovie(":/gif/Buckethead.gif");
         movie->start();
         connect(giftimer,SIGNAL(timeout()),this,SLOT(gif()));
+        giftimer->start(1);
     }
     else if (type == LeafHead) {
         health = 800;
@@ -67,7 +68,7 @@ Zombie::Zombie(ZombieType type, QGraphicsItem *parent) : QGraphicsPixmapItem(par
         setPixmap(QPixmap(":/image/purple hair zombie_transparent.png"));
     }
     if(type == BucketHead)
-        setScale(3);
+        setScale(0.65);
     else if(type == Regular)
         setScale(0.65);
     else
@@ -76,7 +77,7 @@ Zombie::Zombie(ZombieType type, QGraphicsItem *parent) : QGraphicsPixmapItem(par
     AttackTimer = new QTimer();
     connect(AttackTimer, &QTimer::timeout, this, &Zombie::eat);
     connect(moveTimer, &QTimer::timeout, this, &Zombie::move);
-    moveTimer->start(movementDelay*100);
+    moveTimer->start(movementDelay*50);
     AttackTimer->start(timeBetweenAttack*1000);
 }
 
@@ -89,7 +90,7 @@ void Zombie::move() {
     }
     }
     isEating = false;
-    setPos(x()-3.7,y());
+    setPos(x()-1.9,y());
     if(x() <= 120){
         emit zombieWon();
         return;

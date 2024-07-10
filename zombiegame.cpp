@@ -6,7 +6,7 @@ ZombieGame::ZombieGame(Client* c) {
     Sound->setSource(QUrl::fromLocalFile(":/audio/Playing.wav"));
     Sound->setVolume(0.2);
     Sound->play();
-    brain = 0;
+    brain = 2000;
     seconds = 210;
     player = c;
     SelectedCard = nullptr;
@@ -58,6 +58,26 @@ ZombieGame::ZombieGame(Client* c) {
     connect(TallCard,SIGNAL(Selected(ZombieCard*)),this,SLOT(setSelectedCart(ZombieCard*)));
     connect(LeafHeadCard,SIGNAL(Selected(ZombieCard*)),this,SLOT(setSelectedCart(ZombieCard*)));
     connect(AstronautCard,SIGNAL(Selected(ZombieCard*)),this,SLOT(setSelectedCart(ZombieCard*)));
+    // Show Prices
+    QGraphicsTextItem* BucketHeadCardPrice = new QGraphicsTextItem();
+    QGraphicsTextItem* PurpleHairCardPrice = new QGraphicsTextItem();
+    QGraphicsTextItem* RegularCardPrice = new QGraphicsTextItem();
+    QGraphicsTextItem* TallCardPrice = new QGraphicsTextItem();
+    QGraphicsTextItem* LeafHeadCardPrice = new QGraphicsTextItem();
+    QGraphicsTextItem* AstronautCardPrice = new QGraphicsTextItem();
+    BucketHeadCardPrice->setDefaultTextColor(Qt::yellow);
+    BucketHeadCardPrice->setFont(QFont("Arial",12));BucketHeadCardPrice->setPlainText("200"); BucketHeadCardPrice->setPos(25,80); scene->addItem(BucketHeadCardPrice);
+    PurpleHairCardPrice->setDefaultTextColor(Qt::yellow);
+    PurpleHairCardPrice->setFont(QFont("Arial",12));PurpleHairCardPrice->setPlainText("800"); PurpleHairCardPrice->setPos(125,80); scene->addItem(PurpleHairCardPrice);
+    RegularCardPrice->setDefaultTextColor(Qt::yellow);
+    RegularCardPrice->setFont(QFont("Arial",12));RegularCardPrice->setPlainText("100"); RegularCardPrice->setPos(225,80); scene->addItem(RegularCardPrice);
+    TallCardPrice->setDefaultTextColor(Qt::yellow);
+    TallCardPrice->setFont(QFont("Arial",12));TallCardPrice->setPlainText("150"); TallCardPrice->setPos(325,80); scene->addItem(TallCardPrice);
+    LeafHeadCardPrice->setDefaultTextColor(Qt::yellow);
+    LeafHeadCardPrice->setFont(QFont("Arial",12));LeafHeadCardPrice->setPlainText("150"); LeafHeadCardPrice->setPos(425,80); scene->addItem(LeafHeadCardPrice);
+    AstronautCardPrice->setDefaultTextColor(Qt::yellow);
+    AstronautCardPrice->setFont(QFont("Arial",12));AstronautCardPrice->setPlainText("200"); AstronautCardPrice->setPos(525,80); scene->addItem(AstronautCardPrice);
+
 
     view->show(); //Showing View
 }
@@ -72,7 +92,7 @@ void ZombieGame::GetOrderOfClient(QString order)
 {
     QStringList parts = order.split("|");
     if(parts[0] == "Round1Finished" || parts[0] == "Round2Finished"){
-        this->close();
+        view->close();
         delete this;
         return;
     }
@@ -120,18 +140,20 @@ void ZombieGame::Won()
     Sound->setVolume(0.4);
     Sound->play();
     player->SendMessage("Round"+QString::number(player->round)+"Finished|"+player->Username);
-    this->close();
-    delete this;
 }
 
 void ZombieGame::setSelectedCart(ZombieCard *selectedcard)
 {
     if(selectedcard->price > brain){
+        QSoundEffect* Sound = new QSoundEffect();
+        Sound->setSource(QUrl::fromLocalFile(":/audio/BuyError.wav"));
+        Sound->setVolume(0.4);
+        Sound->play();
         qDebug() << "Not Enouth Brain for this item";
         return;
     }
     SelectedCard = selectedcard;
-    qDebug() << "cArd Selected";
+    qDebug() << "Card Selected";
  }
 
 void ZombieGame::clicked(QPointF clickedplace)
@@ -171,17 +193,13 @@ void ZombieGame::clicked(QPointF clickedplace)
             delete newzombie;
             return;
         }
-        for(int i = 0 ; i <= 846; i+=79){
-            if(i <= x && x <= (i + 79)){
-                x=i; break;
-            }
-        }
+        x = 790;
         for(int i = 40 ; i <= 465; i+=72){
             if(i <= y && y <= (i + 72)){
                 y=i; break;
             }
         }
-        x+=110; y+=87;
+        x+=100; y+=87;
         player->SendMessage(order+"|"+QString::number(x)+"|"+QString::number(y));
         QPointF place(x,y);
         brain -= cardprice;
