@@ -44,10 +44,10 @@ Plant::Plant(PlantType type, QGraphicsItem *parent) : QGraphicsPixmapItem(parent
     else if (type == PlumMine) {
         health = 2000;
         firingRate = 0;
-        attackPower = 5000;
+        attackPower = 1500;
         shootTimer = new QTimer();
         connect(shootTimer, &QTimer::timeout, this, &Plant::PlumMineExplode);
-        shootTimer->start(3500);
+        shootTimer->start(100);
         giftimer = new QTimer();
         movie = new QMovie(":/gif/Boom.gif");
         movie->start();
@@ -60,7 +60,7 @@ Plant::Plant(PlantType type, QGraphicsItem *parent) : QGraphicsPixmapItem(parent
         attackPower = 900;
         shootTimer = new QTimer();
         connect(shootTimer, &QTimer::timeout, this, &Plant::JalapenoExplode);
-        shootTimer->start(3500);
+        shootTimer->start(100);
         giftimer = new QTimer();
         movie = new QMovie(":/gif/JalapenoAttack.gif");
         movie->start();
@@ -107,16 +107,6 @@ void Plant::mousePressEvent(QGraphicsSceneMouseEvent *event)
     }
 }
 
-void Plant::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-
-}
-
-void Plant::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
-{
-
-}
-
 void Plant::shoot() {
     Bullet* bullet = new Bullet(attackPower);
     if(type == Boomerang)
@@ -144,7 +134,8 @@ void Plant::JalapenoExplode()
 
 void Plant::PlumMineExplode()
 {
-    QRectF rect(x()-200,y()-200,400,400);
+    QRectF rect(x()-200,y()-135,400,400);
+    qDebug() << rect;
     QList<QGraphicsItem*> items = scene()->items(rect);
     for(QGraphicsItem* item : items){
         if(Zombie* zombie = dynamic_cast<Zombie*>(item)){

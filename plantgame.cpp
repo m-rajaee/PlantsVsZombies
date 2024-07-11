@@ -214,11 +214,23 @@ void PlantGame::clicked(QPointF clickedplace)
             }
         }
         x+=130; y+=98;
-        player->SendMessage(order+"|"+QString::number(x)+"|"+QString::number(y));
         QPointF place(x,y);
+        bool exist = false;
+        for(QPointF t : planted){
+            if(t == place){
+                exist = true;
+                break;
+            }
+        }
+        if(exist){
+            delete newplant; return;
+        }
+        if(newplant->type != Plant::PlantType::Jalapeno && newplant->type != Plant::PlantType::PlumMine)
+            planted.push_back(place);
         sun -= cardprice;
         newplant->setPos(place);
         scene->addItem(newplant);
+        player->SendMessage(order+"|"+QString::number(x)+"|"+QString::number(y));
         SelectedCard=nullptr;
     }
 }

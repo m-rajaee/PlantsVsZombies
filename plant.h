@@ -19,14 +19,11 @@ public:
     int attackPower;
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
 private slots:
     void shoot();
     void JalapenoExplode();
     void PlumMineExplode();
     void gif();
-signals:
 private:
     QMovie* movie;
     QTimer* giftimer;

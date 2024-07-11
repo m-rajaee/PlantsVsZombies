@@ -30,6 +30,7 @@ private:
     int seconds;
     int sun;
     PlantCard* SelectedCard;
+    QVector<QPointF> planted;
 
 };
 
