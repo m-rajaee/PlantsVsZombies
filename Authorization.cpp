@@ -9,7 +9,7 @@ Authorization::Authorization(Client* c,QWidget *parent)
 {
     ui->setupUi(this);
     player = c;
-    connect(player,SIGNAL(Order(QString)),this,SLOT(GetOrderOfClient(QString)));
+    connect(player,SIGNAL(Order(QString)),this,SLOT(getOrderOfClient(QString)));
 }
 
 Authorization::~Authorization()
@@ -20,12 +20,12 @@ Authorization::~Authorization()
 void Authorization::on_pushButton_2_clicked()
 {
     SignupDialog* signupPlants = new SignupDialog(this);
-    connect(signupPlants,SIGNAL(SignupInformation_Entered(QString,QString,QString,QString,QString)),this,SLOT(Get_Entered_Data(QString,QString,QString,QString,QString)));
-    connect(player,SIGNAL(Order(QString)),signupPlants,SLOT(GetOrderOfClient(QString)));
+    connect(signupPlants,SIGNAL(signupInformationEntered(QString,QString,QString,QString,QString)),this,SLOT(getEnteredData(QString,QString,QString,QString,QString)));
+    connect(player,SIGNAL(Order(QString)),signupPlants,SLOT(getOrderOfClient(QString)));
     signupPlants->show();
 }
 
-void Authorization::Get_Entered_Data(QString username,QString password,QString name,QString phone,QString address)
+void Authorization::getEnteredData(QString username,QString password,QString name,QString phone,QString address)
 {
     player->registerUser(username,password,name,phone,address);
 }
@@ -40,33 +40,33 @@ void Authorization::on_pushButton_clicked()
 void Authorization::on_pushButton_3_clicked()
 {
     ForgotPassword* forgot = new ForgotPassword(this);
-    connect(forgot,SIGNAL(ChangeForgotedPassword(QString,QString)),this,SLOT(Resetpassword(QString,QString)));
-    connect(player,SIGNAL(Order(QString)),forgot,SLOT(GetOrderOfClient(QString)));
+    connect(forgot,SIGNAL(changeForgotedPassword(QString,QString)),this,SLOT(resetPassword(QString,QString)));
+    connect(player,SIGNAL(Order(QString)),forgot,SLOT(getOrderOfClient(QString)));
     forgot->show();
 }
 
-void Authorization::GetOrderOfClient(QString order)
+void Authorization::getOrderOfClient(QString order)
 {
 if (order == "LoginError"){
         QMessageBox::critical(nullptr, "Login ERROR", "Username Or Password is Wrong");
     }
 else{
-    QStringList parts = order.split("|");
-    if(parts[0] == "Loggedin"){
+    QStringList orderParts = order.split("|");
+    if(orderParts[0] == "Loggedin"){
     Menu *menu = new Menu(player);
-    connect(menu,SIGNAL(Back()),this,SLOT(GetBack()));
+    connect(menu,SIGNAL(Back()),this,SLOT(getBackToTheAuthorizationPage()));
     menu->show();
     this->hide();
     }
 }
 }
 
-void Authorization::GetBack()
+void Authorization::getBackToTheAuthorizationPage()
 {
-    player->Username="";
+    player->username="";
     this->show();
 }
 
-void Authorization::Resetpassword(QString phone, QString newpass){
+void Authorization::resetPassword(QString phone, QString newpass){
     player->resetPassword(phone,newpass);
 }

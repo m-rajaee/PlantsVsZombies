@@ -27,6 +27,7 @@ PlantCard::PlantCard(PlantCardType type) {
         setPixmap(QPixmap(":/image/boomerang.jpg"));
         price = 125;
     }
+    setOpacity(0.14);
     if(type == Boomerang)
         setScale(0.2);
     else
@@ -35,5 +36,5 @@ PlantCard::PlantCard(PlantCardType type) {
 
 void PlantCard::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    emit Selected(this);
+    emit selected(this);
 }

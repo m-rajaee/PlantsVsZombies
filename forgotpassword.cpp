@@ -21,11 +21,11 @@ void ForgotPassword::on_buttonBox_rejected()
 
 void ForgotPassword::on_buttonBox_accepted()
 {
-    emit ChangeForgotedPassword(ui->lineEdit->text(),ui->lineEdit_2->text());
+    emit changeForgotedPassword(ui->lineEdit->text(),ui->lineEdit_2->text());
     this->close();
 }
 
-void ForgotPassword::GetOrderOfClient(QString order)
+void ForgotPassword::getOrderOfClient(QString order)
 {
     if(order == "PasswordResetError"){
         QMessageBox::critical(nullptr, "Password Reset ERROR", "No User With this Phone Number Exist");

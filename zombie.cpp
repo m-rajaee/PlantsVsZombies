@@ -13,7 +13,7 @@ Zombie::Zombie(ZombieType type, QGraphicsItem *parent) : QGraphicsPixmapItem(par
         Sound->setSource(QUrl::fromLocalFile(":/audio/groan5.wav"));
     else if(a == 3)
         Sound->setSource(QUrl::fromLocalFile(":/audio/groan6.wav"));
-    Sound->setVolume(0.4);
+    Sound->setVolume(0.5);
     Sound->play();
     setFlag(QGraphicsItem::ItemIsFocusable);
     setFocus();
@@ -23,21 +23,21 @@ Zombie::Zombie(ZombieType type, QGraphicsItem *parent) : QGraphicsPixmapItem(par
         movementDelay = 1;
         attackPower = 80;
         timeBetweenAttack = 1;
-        giftimer = new QTimer();
-        movie = new QMovie(":/gif/Regular.gif");
-        movie->start();
-        connect(giftimer,SIGNAL(timeout()),this,SLOT(gif()));
-        giftimer->start(1);
+        gifTimer = new QTimer();
+        gif = new QMovie(":/gif/Regular.gif");
+        gif->start();
+        connect(gifTimer,SIGNAL(timeout()),this,SLOT(Gif()));
+        gifTimer->start(1);
     } else if (type == BucketHead) {
         health = 1950;
         movementDelay = 2;
         attackPower = 100;
         timeBetweenAttack = 1;
-        giftimer = new QTimer();
-        movie = new QMovie(":/gif/Buckethead.gif");
-        movie->start();
-        connect(giftimer,SIGNAL(timeout()),this,SLOT(gif()));
-        giftimer->start(1);
+        gifTimer = new QTimer();
+        gif = new QMovie(":/gif/Buckethead.gif");
+        gif->start();
+        connect(gifTimer,SIGNAL(timeout()),this,SLOT(Gif()));
+        gifTimer->start(1);
     }
     else if (type == LeafHead) {
         health = 800;
@@ -74,11 +74,11 @@ Zombie::Zombie(ZombieType type, QGraphicsItem *parent) : QGraphicsPixmapItem(par
     else
         setScale(0.075);
     moveTimer = new QTimer();
-    AttackTimer = new QTimer();
-    connect(AttackTimer, &QTimer::timeout, this, &Zombie::eat);
-    connect(moveTimer, &QTimer::timeout, this, &Zombie::move);
+    attackTimer = new QTimer();
+    connect(attackTimer, SIGNAL(timeout()), this,SLOT(eat()));
+    connect(moveTimer, SIGNAL(timeout()), this, SLOT(move()));
     moveTimer->start(movementDelay*50);
-    AttackTimer->start(timeBetweenAttack*1000);
+    attackTimer->start(timeBetweenAttack*1000);
 }
 
 void Zombie::move() {
@@ -118,7 +118,7 @@ void Zombie::eat()
     }
 }
 
-void Zombie::gif()
+void Zombie::Gif()
 {
-    setPixmap(movie->currentPixmap());
+    setPixmap(gif->currentPixmap());
 }

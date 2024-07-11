@@ -7,7 +7,7 @@ class Bullet :public QObject ,public QGraphicsEllipseItem{
     Q_OBJECT
 public:
     Bullet(int attackPower);
-    bool isBoomerang;
+    bool isBoomerangBullet;
 private slots:
     void move();
 private:

@@ -8,17 +8,17 @@
             "username": "user1"
         },
         {
-            "email": "user2@gmail.com",
-            "name": "user20name",
-            "password": "8fbe8e13a025185501f49e0fbefc071711b2b78dfc3f2e31dd75747e19fa0f42",
-            "phone": "09352226435",
-            "username": "user2"
+            "email": "user2000@yahoo.com",
+            "name": "user2000Name",
+            "password": "0b4082fb5b71d2a5a5fd47c7f63fa53e5125684bc25f105e38291827de840f67",
+            "phone": "12345678988",
+            "username": "user2000"
         },
         {
             "email": "user3@gmail.com",
-            "name": "MMM",
+            "name": "user3Name",
             "password": "d48b9943c97a1cc654ec36b968d1158a9be20adcb2a8622b0289587ff09fee8f",
-            "phone": "09876543210",
+            "phone": "12345678944",
             "username": "user3"
         }
     ]

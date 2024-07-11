@@ -11,17 +11,17 @@ ShowHistory::ShowHistory(Client* c,QWidget *parent)
 {
     ui->setupUi(this);
     player = c;
-    connect(player,SIGNAL(Order(QString)),this,SLOT(GetOrderOfClient(QString)));
-    player->ShowHistory(player->Username);
+    connect(player,SIGNAL(Order(QString)),this,SLOT(getOrderOfClient(QString)));
+    player->showHistory(player->username);
 }
 
-void ShowHistory::GetOrderOfClient(QString order)
+void ShowHistory::getOrderOfClient(QString order)
 {
-    QStringList parts = order.split("|");
-    if(parts[0] == "ShowHistory"){
-    QString history = parts[1];
+    QStringList orderParts = order.split("|");
+    if(orderParts[0] == "ShowHistory"){
+    QString history = orderParts[1];
     if (history.isEmpty()) {
-        history = "No game history found for " + player->Username;
+        history = "No game history found for " + player->username;
     }
     ui->textEdit->setPlainText(history);
     }

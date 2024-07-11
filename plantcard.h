@@ -17,7 +17,7 @@ public:
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 signals:
-    void Selected(PlantCard*);
+    void selected(PlantCard*);
 };
 
 #endif // PLANTCARD_H

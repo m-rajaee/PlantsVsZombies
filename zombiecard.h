@@ -17,7 +17,7 @@ public:
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 signals:
-    void Selected(ZombieCard*);
+    void selected(ZombieCard*);
 };
 
 #endif // ZOMBIECARD_H

@@ -15,15 +15,15 @@ public:
     explicit LetsPlay(Client* c,QString Oponnent,QWidget *parent = nullptr);
     ~LetsPlay();
 signals:
-    void GameStarted();
+    void matchStarted();
 private slots:
     void on_pushButton_2_clicked();
     void on_pushButton_clicked();
-    void GetOrderOfClient(QString order);
 
 private:
     Ui::LetsPlay *ui;
     Client* player;
+    QString oponnent;
 };
 
 #endif // LETSPLAY_H

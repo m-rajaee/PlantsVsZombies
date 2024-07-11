@@ -24,7 +24,7 @@ void SignupDialog::on_buttonBox_accepted() {
         QMessageBox::critical(nullptr, "SignUp ERROR", "Password Should Have At least 8 Characters");
     }
     else if (ui->email->text().contains("@") && ui->email->text().contains(".com") && ui->phone->text().length() == 11 && ui->password->text().length() >=8){
-    emit SignupInformation_Entered(ui->username->text(),ui->password->text(),ui->name->text(),ui->phone->text(),ui->email->text());
+    emit signupInformationEntered(ui->username->text(),ui->password->text(),ui->name->text(),ui->phone->text(),ui->email->text());
     this->close();
     }
 }
@@ -33,7 +33,7 @@ void SignupDialog::on_buttonBox_rejected()
     this->close();
 }
 
-void SignupDialog::GetOrderOfClient(QString order)
+void SignupDialog::getOrderOfClient(QString order)
 {
     if(order == "SingupErrorOfusername"){
         QMessageBox::critical(nullptr, "SignUp ERROR", "This Username Allready Exist");

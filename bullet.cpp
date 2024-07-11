@@ -3,18 +3,18 @@
 #include <QGraphicsScene>
 #include "zombie.h"
 Bullet::Bullet(int attackPower) {
-    isBoomerang = false;
+    isBoomerangBullet = false;
     AttackPower = attackPower;
     setRect(0,0,25,25);
     setBrush(QBrush(Qt::green));
     QTimer* timer = new QTimer();
     connect(timer,SIGNAL(timeout()),SLOT(move()));
-    timer->start(50); //every 50 miliseconds timeouts
+    timer->start(50);
 }
 
 void Bullet::move()
 {
-    // check if bullet colide with an enemy
+
     QList<QGraphicsItem*> collidingItems = scene()->collidingItems(this);
     for(QGraphicsItem* item : collidingItems){
         if(Zombie* zombie = dynamic_cast<Zombie*>(item)){
@@ -23,7 +23,7 @@ void Bullet::move()
                 scene()->removeItem(zombie);
                 delete zombie;
             }
-            if(!isBoomerang){
+            if(!isBoomerangBullet){
             scene()->removeItem(this);
             delete this;
             return;

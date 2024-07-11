@@ -6,27 +6,26 @@
 #include "zombiegame.h"
 Client::Client(QObject *parent) : QObject(parent), socket(new QTcpSocket(this))
 {
-    wins = 0;
-    round = 1;
-    connect(socket, &QTcpSocket::readyRead, this, &Client::onReadyRead);
+    numberOfWins = 0;
+    currentRoundNumber = 1;
+    connect(socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
     connect(this,SIGNAL(Order(QString)),this,SLOT(getOrder(QString)));
 }
 
 bool Client::connectToServer(const QString &host, quint16 port)
 {
     socket->connectToHost(host, port);
-    if (socket->waitForConnected(1000)) {
+    bool IsConnected = socket->waitForConnected(1000);
+    if (IsConnected)
         qDebug() << "Connected to server!";
-        return true;
-    } else {
+    else
         qDebug() << "Connection failed!";
-        return false;
-    }
+    return IsConnected;
 }
 
 void Client::registerUser(const QString &username, const QString &password, const QString &name, const QString &phone, const QString &email)
 {
-    if (socket->state() == QTcpSocket::ConnectedState) {
+    if (isConnectedToServer()) {
         QTextStream stream(socket);
         stream << "REGISTER|" << username << "|" << password << "|" << name << "|" << phone << "|" << email;
         socket->flush();
@@ -35,7 +34,7 @@ void Client::registerUser(const QString &username, const QString &password, cons
 
 void Client::loginUser(const QString &username, const QString &password)
 {
-    if (socket->state() == QTcpSocket::ConnectedState) {
+    if (isConnectedToServer()) {
         QTextStream stream(socket);
         stream << "LOGIN|" << username << "|" << password;
         socket->flush();
@@ -44,7 +43,7 @@ void Client::loginUser(const QString &username, const QString &password)
 
 void Client::resetPassword(const QString &phone, const QString &newPassword)
 {
-    if (socket->state() == QTcpSocket::ConnectedState) {
+    if (isConnectedToServer()) {
         QTextStream stream(socket);
         stream << "RESET_PASSWORD|" << phone << "|" << newPassword;
         socket->flush();
@@ -53,7 +52,7 @@ void Client::resetPassword(const QString &phone, const QString &newPassword)
 
 void Client::addHistory(const QString& username,const QString& opponent,const QString& role1,const QString& winner1,const QString& role2,const QString& winner2,const QString& winner)
 {
-    if (socket->state() == QTcpSocket::ConnectedState) {
+    if (isConnectedToServer()) {
         QTextStream stream(socket);
         QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd,hh:mm:ss");
         stream << "ADD_HISTORY|" << username << "|" << opponent << "|" << time << "|" << role1 << "|" << winner1 << "|" << role2 << "|" << winner2 << "|" << winner;
@@ -61,26 +60,27 @@ void Client::addHistory(const QString& username,const QString& opponent,const QS
     }
 }
 
-void Client::ChangeInformation(const QString &username, const QString &newusername, const QString &newpassword, const QString &newname, const QString &newphone, const QString &newemail)
+void Client::changeInformation(const QString &username, const QString &newusername, const QString &newpassword, const QString &newname, const QString &newphone, const QString &newemail)
 {
-    if (socket->state() == QTcpSocket::ConnectedState) {
+    if (isConnectedToServer()) {
         QTextStream stream(socket);
         stream << "CHANGE_INFORMATION|" << username << "|" << newusername << "|" << newpassword << "|" << newname << "|" << newphone << "|" << newemail;
         socket->flush();
     }
 }
 
-void Client::ShowHistory(const QString& username)
+void Client::showHistory(const QString& username)
 {
-    if (socket->state() == QTcpSocket::ConnectedState) {
+    if (isConnectedToServer()) {
         QTextStream stream(socket);
         stream << "SHOW_HISTORY|" << username ;
         socket->flush();
     }
 }
 
-void Client::SendMessage(const QString &message)
+void Client::sendMessage(const QString &message)
 {
+
     if (socket->state() == QTcpSocket::ConnectedState) {
         QTextStream stream(socket);
         stream << message;
@@ -89,6 +89,11 @@ void Client::SendMessage(const QString &message)
     } else {
         qDebug() << "Not connected to server!";
     }
+}
+
+bool Client::isConnectedToServer()
+{
+    return (socket->state() == QTcpSocket::ConnectedState);
 }
 
 void Client::onReadyRead()
@@ -101,41 +106,41 @@ void Client::onReadyRead()
 void Client::getOrder(QString order)
 {
     qDebug() << "Server Said : " << order;
-    QStringList parts = order.split("|");
-    if(parts[0] == "Loggedin"){
-        Username = parts[1];
-    }else if(parts[0] == "InformationChanged"){
-        Username = parts[1];
-    }else if(parts[0] == "StartTheMatch"){
-        if(parts[1] == "Plant"){
-            data.role1 = "Plant"; data.role2 = "Zombie";
+    QStringList orderParts = order.split("|");
+    if(orderParts[0] == "Loggedin"){
+        username = orderParts[1];
+    }else if(orderParts[0] == "InformationChanged"){
+        username = orderParts[1];
+    }else if(orderParts[0] == "StartTheMatch"){
+        if(orderParts[1] == "Plant"){
+            data.roleInRound1 = "Plant"; data.roleInRound1 = "Zombie";
             PlantGame * plantgame = new PlantGame(this);
-        }else if(parts[1] == "Zombie"){
-            data.role1 = "Zombie"; data.role2 = "Plant";
+        }else if(orderParts[1] == "Zombie"){
+            data.roleInRound1 = "Zombie"; data.roleInRound1 = "Plant";
             ZombieGame* zombiegame = new ZombieGame(this);
         }
-    }else if(parts[0] == "Round1Finished"){
-        round++;
-        data.winner1 = parts[1];
-        if(data.winner1 == Username)
-            wins++;
-        if(data.role2 == "Zombie")
+    }else if(orderParts[0] == "Round1Finished"){
+        currentRoundNumber++;
+        data.winnerOfRound1 = orderParts[1];
+        if(data.winnerOfRound1 == username)
+            numberOfWins++;
+        if(data.roleInRound1 == "Zombie")
             ZombieGame* zombiegame = new ZombieGame(this);
-        else if(data.role2 == "Plant")
+        else if(data.roleInRound1 == "Plant")
             PlantGame * plantgame = new PlantGame(this);
-    }else if(parts[0] == "Round2Finished"){
-        data.winner2 = parts[1];
-        if(data.winner2 == Username)
-            wins++;
-        if(wins == 0)
-            data.winner = data.opponent;
-        else if(wins == 1)
-            data.winner = "Draw";
-        else if(wins ==2)
-            data.winner = Username;
-        addHistory(Username,data.opponent,data.role1,data.winner1,data.role2,data.winner2,data.winner);
-        wins = 0; round = 1;
-        emit MatchFinished();
+    }else if(orderParts[0] == "Round2Finished"){
+        data.winnerOfRound2 = orderParts[1];
+        if(data.winnerOfRound2 == username)
+            numberOfWins++;
+        if(numberOfWins == 0)
+            data.winnerOfTheMatch = data.oponnent;
+        else if(numberOfWins == 1)
+            data.winnerOfTheMatch = "Draw";
+        else if(numberOfWins ==2)
+            data.winnerOfTheMatch = username;
+        addHistory(username,data.oponnent,data.roleInRound1,data.winnerOfRound1,data.roleInRound1,data.winnerOfRound2,data.winnerOfTheMatch);
+        numberOfWins = 0; currentRoundNumber = 1;
+        emit matchFinished();
     }
 }
 

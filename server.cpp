@@ -4,8 +4,8 @@
 #include <QCryptographicHash>
 Server::Server(QObject *parent) : QTcpServer(parent)
 {
-    loadUserData();
-    loadHistory();
+    loadUsersDataFromFile();
+    loadHistoryFromFile();
     if (this->listen(QHostAddress::Any, 12345)) {
         qDebug() << "Server started!";
     } else {
@@ -26,8 +26,8 @@ void Server::incomingConnection(qintptr socketDescriptor)
 {
     QTcpSocket *socket = new QTcpSocket(this);
     if (socket->setSocketDescriptor(socketDescriptor)) {
-        connect(socket, &QTcpSocket::readyRead, this, &Server::onReadyRead);
-        connect(socket, &QTcpSocket::disconnected, this, &Server::onDisconnected);
+        connect(socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
+        connect(socket, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
         clients.insert(socket);
         qDebug() << "New client connected!";
     } else {
@@ -55,7 +55,7 @@ void Server::onDisconnected()
     }
 }
 
-void Server::loadUserData()
+void Server::loadUsersDataFromFile()
 {
     QFile file("D:/Qt/temp3OfProject/users.json");
     if (file.open(QIODevice::ReadOnly)) {
@@ -66,17 +66,17 @@ void Server::loadUserData()
         qDebug() << "Loaded";
     }
 }
-void Server::loadHistory(){
+void Server::loadHistoryFromFile(){
     QFile file("D:/Qt/temp3OfProject/history.json");
     if (file.open(QIODevice::ReadOnly)) {
         QByteArray data = file.readAll();
         QJsonDocument doc = QJsonDocument::fromJson(data);
-        History = doc.object().value("History").toArray();
+        history = doc.object().value("History").toArray();
         file.close();
     }
 }
 
-void Server::saveUserData()
+void Server::saveUsersDataToFile()
 {
     QFile file("D:/Qt/temp3OfProject/users.json");
     if (file.open(QIODevice::WriteOnly)) {
@@ -87,11 +87,11 @@ void Server::saveUserData()
         file.close();
     }
 }
-void Server:: saveHistory(){
+void Server:: saveHistoryToFile(){
     QFile file("D:/Qt/temp3OfProject/history.json");
     if (file.open(QIODevice::WriteOnly)) {
         QJsonObject obj;
-        obj["History"] = History;
+        obj["History"] = history;
         QJsonDocument doc(obj);
         file.write(doc.toJson());
         file.close();
@@ -105,23 +105,23 @@ QString Server::hashPassword(const QString &password)
 void Server::processRequest(QTcpSocket *socket, const QString &request)
 {
     QTextStream stream(socket);
-    QStringList parts = request.split("|");
-    if (parts.isEmpty()) {
+    QStringList orderParts = request.split("|");
+    if (orderParts.isEmpty()) {
         stream << "Invalid request";
         return;
     }
 
-    QString command = parts[0].toUpper();
+    QString command = orderParts[0].toUpper();
     if (command == "REGISTER") {
-        if (parts.size() != 6) {
+        if (orderParts.size() != 6) {
             stream << "Invalid parameters";
             return;
         }
-        QString username = parts[1];
-        QString password = parts[2];
-        QString name = parts[3];
-        QString phone = parts[4];
-        QString email = parts[5];
+        QString username = orderParts[1];
+        QString password = orderParts[2];
+        QString name = orderParts[3];
+        QString phone = orderParts[4];
+        QString email = orderParts[5];
         qDebug() << username;
         bool exist = false;
         for (auto it = users.begin();it!=users.end();it++) {
@@ -154,15 +154,15 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
         obj["phone"] = phone;
         obj["email"] = email;
         users.append(obj);
-        saveUserData();
+        saveUsersDataToFile();
         stream << "SignedUP";
     } else if (command == "LOGIN") {
-        if (parts.size() != 3) {
+        if (orderParts.size() != 3) {
             stream << "Invalid parameters";
             return;
         }
-        QString username = parts[1];
-        QString password = parts[2];
+        QString username = orderParts[1];
+        QString password = orderParts[2];
 
         bool valid = false;
         for (auto it = users.begin();it!=users.end();it++) {
@@ -180,12 +180,12 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
             stream << "LoginError";
         }
     } else if (command == "RESET_PASSWORD") {
-        if (parts.size() != 3) {
+        if (orderParts.size() != 3) {
             stream << "Invalid parameters";
             return;
         }
-        QString phone = parts[1];
-        QString newPassword = parts[2];
+        QString phone = orderParts[1];
+        QString newPassword = orderParts[2];
 
         bool valid = false;
         for(auto it = users.begin();it!=users.end();it++){
@@ -199,20 +199,20 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
         }
 
         if (valid) {
-            saveUserData();
+            saveUsersDataToFile();
             stream << "PasswordReseted";
         } else {
             stream << "PasswordResetError";
         }
     }else if (command == "ADD_HISTORY"){
-        QString username = parts[1];
-        QString opponent = parts[2];
-        QString time = parts[3];
-        QString role1 = parts[4];
-        QString winner1 = parts[5];
-        QString role2 = parts[6];
-        QString winner2 = parts[7];
-        QString winner = parts[8];
+        QString username = orderParts[1];
+        QString opponent = orderParts[2];
+        QString time = orderParts[3];
+        QString role1 = orderParts[4];
+        QString winner1 = orderParts[5];
+        QString role2 = orderParts[6];
+        QString winner2 = orderParts[7];
+        QString winner = orderParts[8];
         bool exist = false;
         for (auto it = users.begin();it!=users.end();it++) {
             QJsonObject obj = (*it).toObject();
@@ -246,16 +246,16 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
         obj["role2"] = role2;
         obj["winner2"] = winner2;
         obj["winner"] = winner;
-        History.append(obj);
-        saveHistory();
+        history.append(obj);
+        saveHistoryToFile();
         stream << "New Game Added To History";
     }else if (command == "CHANGE_INFORMATION"){
-        QString username = parts[1];
-        QString newusername = parts[2];
-        QString newpassword = parts[3];
-        QString newname = parts[4];
-        QString newphone = parts[5];
-        QString newemail = parts[6];
+        QString username = orderParts[1];
+        QString newusername = orderParts[2];
+        QString newpassword = orderParts[3];
+        QString newname = orderParts[4];
+        QString newphone = orderParts[5];
+        QString newemail = orderParts[6];
         bool exist = false;
         for(auto it = users.begin();it!=users.end();it++){
             QJsonObject obj = (*it).toObject();
@@ -279,8 +279,8 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
                 break;
             }
         }
-        saveUserData();
-        for(auto it = History.begin();it!=History.end();it++){
+        saveUsersDataToFile();
+        for(auto it = history.begin();it!=history.end();it++){
             QJsonObject obj = (*it).toObject();
             if (obj["username"].toString() == username) {
                 obj["username"] = newusername;
@@ -291,10 +291,10 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
                 *it = obj;
             }
         }
-        saveHistory();
+        saveHistoryToFile();
         stream << "InformationChanged" << "|" << newusername;
     }else if(command == "SHOW_HISTORY"){
-        QString username = parts[1];
+        QString username = orderParts[1];
         QFile file("D:/Qt/temp3OfProject/history.json");
         file.open(QIODevice::ReadOnly);
         QByteArray data = file.readAll();
@@ -330,9 +330,9 @@ void Server::processRequest(QTcpSocket *socket, const QString &request)
             player2Message << "StartTheMatch|Plant";
         }
         player1->flush(); player2->flush(); return;
-    }else if(parts[0] == "Round1Finished"){
+    }else if(orderParts[0] == "Round1Finished"){
         broadcastMessage(request);
-    }else if(parts[0] == "Round2Finished"){
+    }else if(orderParts[0] == "Round2Finished"){
         broadcastMessage(request);
     }
     else {

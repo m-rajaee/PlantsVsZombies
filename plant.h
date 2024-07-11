@@ -12,7 +12,7 @@ public:
         PeaShooter, TwoPeaShooter, Walnut, PlumMine, Jalapeno, Boomerang
     };
     Plant(PlantType type, QGraphicsItem *parent = nullptr);
-    PlantType type;
+    PlantType Type;
     QTimer *shootTimer;
     int health;
     int firingRate;
@@ -21,12 +21,12 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 private slots:
     void shoot();
-    void JalapenoExplode();
-    void PlumMineExplode();
-    void gif();
+    void jalapenoExplode();
+    void plumMineExplode();
+    void updatePixmapFromGif();
 private:
-    QMovie* movie;
-    QTimer* giftimer;
+    QMovie* gif;
+    QTimer* gifTimer;
 };
 
 #endif // PLANT_H

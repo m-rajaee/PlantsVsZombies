@@ -56,5 +56,9 @@
         <file>image/walnut.jpg</file>
         <file>image/walnut_transparent.png</file>
         <file>audio/Playing.wav</file>
+        <file>image/laugh.png</file>
+        <file>image/poker.png</file>
+        <file>image/rage.png</file>
+        <file>image/sunglass.png</file>
     </qresource>
 </RCC>

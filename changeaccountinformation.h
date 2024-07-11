@@ -18,7 +18,7 @@ public:
 private slots:
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();
-    void GetOrderOfClient(QString order);
+    void getOrderOfClient(QString order);
 
 private:
     Ui::ChangeAccountInformation *ui;

@@ -12,6 +12,7 @@ SOURCES += \
     bullet.cpp \
     changeaccountinformation.cpp \
     client.cpp \
+    emoji.cpp \
     forgotpassword.cpp \
     letsplay.cpp \
     main.cpp \
@@ -34,6 +35,7 @@ HEADERS += \
     bullet.h \
     changeaccountinformation.h \
     client.h \
+    emoji.h \
     forgotpassword.h \
     letsplay.h \
     mouse.h \

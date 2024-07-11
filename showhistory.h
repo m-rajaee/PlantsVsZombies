@@ -15,7 +15,7 @@ public:
     explicit ShowHistory(Client* c,QWidget *parent = nullptr);
     ~ShowHistory();
 private slots:
-    void GetOrderOfClient(QString order);
+    void getOrderOfClient(QString order);
 private:
     Ui::ShowHistory *ui;
     Client* player;

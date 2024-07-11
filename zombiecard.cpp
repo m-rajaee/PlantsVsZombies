@@ -27,10 +27,11 @@ ZombieCard::ZombieCard(ZombieCardType type) {
         setPixmap(QPixmap(":/image/purple hair zombie.jpg"));
         price = 800;
     }
+    setOpacity(0.14);
     setScale(0.065);
 }
 
 void ZombieCard::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    emit Selected(this);
+    emit selected(this);
 }

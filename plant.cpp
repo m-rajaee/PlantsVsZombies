@@ -3,7 +3,7 @@
 #include "bullet.h"
 #include <QGraphicsScene>
 #include<QGraphicsSceneMouseEvent>
-Plant::Plant(PlantType type, QGraphicsItem *parent) : QGraphicsPixmapItem(parent), type(type) {
+Plant::Plant(PlantType type, QGraphicsItem *parent) : QGraphicsPixmapItem(parent), Type(type) {
     setFlag(QGraphicsItem::ItemIsFocusable);
     setFocus();
     if (type == PeaShooter) {
@@ -11,61 +11,61 @@ Plant::Plant(PlantType type, QGraphicsItem *parent) : QGraphicsPixmapItem(parent
         firingRate = 2;
         attackPower = 75;
         shootTimer = new QTimer();
-        connect(shootTimer, &QTimer::timeout, this, &Plant::shoot);
+        connect(shootTimer, SIGNAL(timeout()), this, SLOT(shoot()));
         shootTimer->start(firingRate*1000);
-        giftimer = new QTimer();
-        movie = new QMovie(":/gif/Peashooter.gif");
-        movie->start();
-        connect(giftimer,SIGNAL(timeout()),this,SLOT(gif()));
-        giftimer->start(1);
+        gifTimer = new QTimer();
+        gif = new QMovie(":/gif/Peashooter.gif");
+        gif->start();
+        connect(gifTimer,SIGNAL(timeout()),this,SLOT(updatePixmapFromGif()));
+        gifTimer->start(1);
     } else if (type == TwoPeaShooter) {
         health = 200;
         firingRate = 1;
         attackPower = 120;
         shootTimer = new QTimer();
-        connect(shootTimer, &QTimer::timeout, this, &Plant::shoot);
+        connect(shootTimer, SIGNAL(timeout()), this, SLOT(shoot()));
         shootTimer->start(firingRate*1000);
-        giftimer = new QTimer();
-        movie = new QMovie(":/gif/Repeater.gif");
-        movie->start();
-        connect(giftimer,SIGNAL(timeout()),this,SLOT(gif()));
-        giftimer->start(1);
+        gifTimer = new QTimer();
+        gif = new QMovie(":/gif/Repeater.gif");
+        gif->start();
+        connect(gifTimer,SIGNAL(timeout()),this,SLOT(updatePixmapFromGif()));
+        gifTimer->start(1);
     }
     else if (type == Walnut) {
         health = 400;
         firingRate = 0;
         attackPower = 0;
-        giftimer = new QTimer();
-        movie = new QMovie(":/gif/WallNut.gif");
-        movie->start();
-        connect(giftimer,SIGNAL(timeout()),this,SLOT(gif()));
-        giftimer->start(1);
+        gifTimer = new QTimer();
+        gif = new QMovie(":/gif/WallNut.gif");
+        gif->start();
+        connect(gifTimer,SIGNAL(timeout()),this,SLOT(updatePixmapFromGif()));
+        gifTimer->start(1);
     }
     else if (type == PlumMine) {
         health = 2000;
         firingRate = 0;
         attackPower = 1500;
         shootTimer = new QTimer();
-        connect(shootTimer, &QTimer::timeout, this, &Plant::PlumMineExplode);
+        connect(shootTimer, &QTimer::timeout, this, &Plant::plumMineExplode);
         shootTimer->start(100);
-        giftimer = new QTimer();
-        movie = new QMovie(":/gif/Boom.gif");
-        movie->start();
-        connect(giftimer,SIGNAL(timeout()),this,SLOT(gif()));
-        giftimer->start(50);
+        gifTimer = new QTimer();
+        gif = new QMovie(":/gif/Boom.gif");
+        gif->start();
+        connect(gifTimer,SIGNAL(timeout()),this,SLOT(updatePixmapFromGif()));
+        gifTimer->start(50);
     }
     else if (type == Jalapeno) {
         health = 2000;
         firingRate = 0;
         attackPower = 900;
         shootTimer = new QTimer();
-        connect(shootTimer, &QTimer::timeout, this, &Plant::JalapenoExplode);
+        connect(shootTimer, SIGNAL(timeout()), this, SLOT(jalapenoExplode()));
         shootTimer->start(100);
-        giftimer = new QTimer();
-        movie = new QMovie(":/gif/JalapenoAttack.gif");
-        movie->start();
-        connect(giftimer,SIGNAL(timeout()),this,SLOT(gif()));
-        giftimer->start(50);
+        gifTimer = new QTimer();
+        gif = new QMovie(":/gif/JalapenoAttack.gif");
+        gif->start();
+        connect(gifTimer,SIGNAL(timeout()),this,SLOT(updatePixmapFromGif()));
+        gifTimer->start(50);
     }
     else if (type == Boomerang) {
         setPixmap(QPixmap(":/image/boomrang_transparent.png"));
@@ -74,18 +74,18 @@ Plant::Plant(PlantType type, QGraphicsItem *parent) : QGraphicsPixmapItem(parent
         firingRate = 2;
         attackPower = 90;
         shootTimer = new QTimer();
-        connect(shootTimer, &QTimer::timeout, this, &Plant::shoot);
+        connect(shootTimer, SIGNAL(timeout()), this, SLOT(jalapenoExplode()));
         shootTimer->start(firingRate*1000);
     }
     if(type == Jalapeno){
         QSoundEffect* Sound = new QSoundEffect();
         Sound->setSource(QUrl::fromLocalFile(":/audio/JalapenoExplode.wav"));
-        Sound->setVolume(0.4);
+        Sound->setVolume(0.5);
         Sound->play();
     }else if (type == PlumMine){
         QSoundEffect* Sound = new QSoundEffect();
         Sound->setSource(QUrl::fromLocalFile(":/audio/PlumMine.wav"));
-        Sound->setVolume(0.4);
+        Sound->setVolume(0.5);
         Sound->play();
     }
     else{
@@ -95,7 +95,7 @@ Plant::Plant(PlantType type, QGraphicsItem *parent) : QGraphicsPixmapItem(parent
             setScale(0.8);
     QSoundEffect* Sound = new QSoundEffect();
     Sound->setSource(QUrl::fromLocalFile(":/audio/Kasht.wav"));
-    Sound->setVolume(0.4);
+    Sound->setVolume(0.5);
     Sound->play();
     }
 }
@@ -109,13 +109,13 @@ void Plant::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void Plant::shoot() {
     Bullet* bullet = new Bullet(attackPower);
-    if(type == Boomerang)
-        bullet->isBoomerang = true;
+    if(Type == Boomerang)
+        bullet->isBoomerangBullet = true;
     bullet->setPos(x()+60,y());
     scene()->addItem(bullet);
 }
 
-void Plant::JalapenoExplode()
+void Plant::jalapenoExplode()
 {
     QRectF rect(0,y()-50,scene()->sceneRect().width(),100);
     QList<QGraphicsItem*> items = scene()->items(rect);
@@ -132,7 +132,7 @@ void Plant::JalapenoExplode()
     delete this;
 }
 
-void Plant::PlumMineExplode()
+void Plant::plumMineExplode()
 {
     QRectF rect(x()-200,y()-135,400,400);
     qDebug() << rect;
@@ -150,7 +150,7 @@ void Plant::PlumMineExplode()
     delete this;
 }
 
-void Plant::gif()
+void Plant::updatePixmapFromGif()
 {
-    setPixmap(movie->currentPixmap());
+    setPixmap(gif->currentPixmap());
 }

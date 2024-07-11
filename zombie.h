@@ -14,7 +14,7 @@ public:
     Zombie(ZombieType type, QGraphicsItem *parent = nullptr);
     ZombieType type;
     QTimer *moveTimer;
-    QTimer* AttackTimer;
+    QTimer* attackTimer;
     int health;
     int movementDelay;
     int attackPower;
@@ -25,10 +25,10 @@ signals:
 private slots:
     void move();
     void eat();
-    void gif();
+    void Gif();
 private:
-    QMovie* movie;
-    QTimer* giftimer;
+    QMovie* gif;
+    QTimer* gifTimer;
 
 };
 

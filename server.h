@@ -25,11 +25,11 @@ private slots:
 private:
     QSet<QTcpSocket*> clients;
     QJsonArray users; // array to hold user information
-    QJsonArray History;
-    void loadUserData();
-    void saveUserData();
-    void loadHistory();
-    void saveHistory();
+    QJsonArray history;
+    void loadUsersDataFromFile();
+    void saveUsersDataToFile();
+    void loadHistoryFromFile();
+    void saveHistoryToFile();
     void processRequest(QTcpSocket *socket, const QString &request);
     QString hashPassword(const QString &password); // function to hash passwords
 };

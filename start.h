@@ -19,11 +19,11 @@ public:
     explicit Start(Client* c,QWidget *parent = nullptr);
     ~Start();
 private slots:
-    void gotologin();
+    void goToAuthorization();
 private:
     Ui::Start *ui;
-    QPushButton *start_button;
-    QVBoxLayout *main_layout;
+    QPushButton *startButton;
+    QVBoxLayout *mainLayout;
     Client* player;
     QLineEdit* ip;
     QLineEdit* port;

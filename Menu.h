@@ -15,7 +15,7 @@ public:
     explicit Menu(Client* c,QWidget *parent = nullptr);
     ~Menu();
 private slots:
-    void GetOrderOfClient(QString order);
+    void getOrderOfClient(QString order);
     void on_pushButton_4_clicked();
 
     void on_pushButton_clicked();
@@ -24,14 +24,14 @@ private slots:
 
     void on_pushButton_3_clicked();
     void gameStarted();
-    void MatchFinished();
+    void matchFinished();
 
 signals:
     void Back();
 private:
     Ui::Menu *ui;
     Client* player;
-    QSoundEffect* MenuSound;
+    QSoundEffect* menuSound;
 };
 
 #endif // MENU_H

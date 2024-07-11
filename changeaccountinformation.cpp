@@ -7,7 +7,7 @@ ChangeAccountInformation::ChangeAccountInformation(Client* c,QWidget *parent)
 {
     ui->setupUi(this);
     player = c;
-    connect(player,SIGNAL(Order(QString)),this,SLOT(GetOrderOfClient(QString)));
+    connect(player,SIGNAL(Order(QString)),this,SLOT(getOrderOfClient(QString)));
 }
 
 ChangeAccountInformation::~ChangeAccountInformation()
@@ -27,7 +27,7 @@ void ChangeAccountInformation::on_buttonBox_accepted()
         QMessageBox::critical(nullptr, "Change Account Information ERROR", "Password Should Have At least 8 Characters");
     }
     else if (ui->email->text().contains("@") && ui->email->text().contains(".com") && ui->phone->text().length() == 11 && ui->pass->text().length() >=8){
-        player->ChangeInformation(player->Username,ui->username->text(),ui->pass->text(),ui->name->text(),ui->phone->text(),ui->email->text());
+        player->changeInformation(player->username,ui->username->text(),ui->pass->text(),ui->name->text(),ui->phone->text(),ui->email->text());
     }
 }
 
@@ -37,10 +37,10 @@ void ChangeAccountInformation::on_buttonBox_rejected()
     this->close();
 }
 
-void ChangeAccountInformation::GetOrderOfClient(QString order)
+void ChangeAccountInformation::getOrderOfClient(QString order)
 {
-    QStringList parts = order.split("|");
-    if(parts[0] == "InformationChanged"){
+    QStringList orderParts = order.split("|");
+    if(orderParts[0] == "InformationChanged"){
         QMessageBox::critical(nullptr, "Change Account Information", "User Information Edited Succecfully");
         this->close();
     }else if (order == "ChangeInformationError"){

@@ -15,11 +15,11 @@ public:
     explicit ForgotPassword(QWidget *parent = nullptr);
     ~ForgotPassword();
 signals:
-    void ChangeForgotedPassword(QString,QString);
+    void changeForgotedPassword(QString,QString);
 private slots:
     void on_buttonBox_rejected();
     void on_buttonBox_accepted();
-    void GetOrderOfClient(QString order);
+    void getOrderOfClient(QString order);
 private:
     Ui::ForgotPassword *ui;
 };

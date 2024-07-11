@@ -15,9 +15,9 @@ public:
     Resource(ResourceType type);
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 signals:
-    void Collected();
+    void collected();
 private slots:
-    void Destroy();
+    void destroy();
 private:
     QTimer* timer;
 };

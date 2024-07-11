@@ -13,27 +13,28 @@ public:
     void loginUser(const QString &username, const QString &password);
     void resetPassword(const QString &phone, const QString &newPassword);
     void addHistory(const QString& username,const QString& opponent,const QString& role1,const QString& winner1,const QString& role2,const QString& winner2,const QString& winner);
-    void ChangeInformation(const QString &username, const QString& newusername ,const QString &newpassword, const QString &newname, const QString &newphone, const QString & newemail);
-    void ShowHistory(const QString& username);
-    void SendMessage(const QString& message);
-    QString Username;
+    void changeInformation(const QString &username, const QString& newusername ,const QString &newpassword, const QString &newname, const QString &newphone, const QString & newemail);
+    void showHistory(const QString& username);
+    void sendMessage(const QString& message);
+    bool isConnectedToServer();
+    QString username;
     struct matchdata{
-        QString opponent;
-        QString role1;
-        QString winner1;
-        QString role2;
-        QString winner2;
-        QString winner;
+        QString oponnent;
+        QString roleInRound1;
+        QString winnerOfRound1;
+        QString roleInRound2;
+        QString winnerOfRound2;
+        QString winnerOfTheMatch;
     };
     matchdata data;
-    int wins;
-    int round;
+    int numberOfWins;
+    int currentRoundNumber;
 private slots:
     void onReadyRead();
     void getOrder(QString order);
 signals:
     void Order(QString);
-    void MatchFinished();
+    void matchFinished();
 private:
     QTcpSocket *socket;
 };

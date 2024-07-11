@@ -8,16 +8,16 @@ Menu::Menu(Client* c,QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::Menu)
 {
-    MenuSound = new QSoundEffect();
-    MenuSound->setSource(QUrl::fromLocalFile(":/audio/Menu.wav"));
-    MenuSound->setVolume(0.4);
-    MenuSound->play();
-    MenuSound->setLoopCount(QSoundEffect::Infinite);
+    menuSound = new QSoundEffect();
+    menuSound->setSource(QUrl::fromLocalFile(":/audio/Menu.wav"));
+    menuSound->setVolume(0.4);
+    menuSound->play();
+    menuSound->setLoopCount(QSoundEffect::Infinite);
     ui->setupUi(this);
     player = c;
-    connect(player,SIGNAL(Order(QString)),this,SLOT(GetOrderOfClient(QString)));
-    ui->label->setText("Welcome To The Game, "+player->Username);
-    connect(player,SIGNAL(MatchFinished()),this,SLOT(MatchFinished()));
+    connect(player,SIGNAL(Order(QString)),this,SLOT(getOrderOfClient(QString)));
+    ui->label->setText("Welcome To The Game, "+player->username);
+    connect(player,SIGNAL(matchFinished()),this,SLOT(matchFinished()));
 }
 
 Menu::~Menu()
@@ -25,19 +25,19 @@ Menu::~Menu()
     delete ui;
 }
 
-void Menu::GetOrderOfClient(QString order)
+void Menu::getOrderOfClient(QString order)
 {
     QStringList parts = order.split("|");
     if(parts[0] == "LetsPlay"){
         LetsPlay* letsplay = new LetsPlay(player,parts[1]);
-        connect(letsplay,SIGNAL(GameStarted()),this,SLOT(gameStarted()));
+        connect(letsplay,SIGNAL(matchStarted()),this,SLOT(gameStarted()));
         letsplay->show();
     }else if(parts[0] == "StartTheMatch"){
-        MenuSound->stop();
+        menuSound->stop();
         this->close();
     }
     else if(order == "MatchStarted"){
-        MenuSound->stop();
+        menuSound->stop();
         this->close();
     }
     else if(order == "MatchStartRefused"){
@@ -48,14 +48,14 @@ void Menu::GetOrderOfClient(QString order)
 void Menu::on_pushButton_4_clicked()
 {
     emit Back();
-    MenuSound->stop();
+    menuSound->stop();
     this->close();
 }
 
 
 void Menu::on_pushButton_clicked()
 {
-    player->SendMessage("LetsPlay|"+player->Username);
+    player->sendMessage("LetsPlay|"+player->username);
 }
 
 
@@ -74,13 +74,13 @@ void Menu::on_pushButton_3_clicked()
 
 void Menu::gameStarted()
 {
-    MenuSound->stop();
+    menuSound->stop();
     this->close();
 }
 
-void Menu::MatchFinished()
+void Menu::matchFinished()
 {
-    MenuSound->play();
+    menuSound->play();
     this->show();
 }
 

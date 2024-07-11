@@ -5,13 +5,13 @@
             "role1": "Plant",
             "role2": "Zombie",
             "time": "2024-07-09,22:35:18",
-            "username": "user2",
+            "username": "user2000",
             "winner": "Draw",
             "winner1": "user3",
             "winner2": "user2"
         },
         {
-            "opponent": "user2",
+            "opponent": "user2000",
             "role1": "Zombie",
             "role2": "Plant",
             "time": "2024-07-09,22:35:18",
@@ -19,6 +19,36 @@
             "winner": "Draw",
             "winner1": "user3",
             "winner2": "user2"
+        },
+        {
+            "opponent": "user2000",
+            "role1": "Zombie",
+            "role2": "Plant",
+            "time": "2024-07-11,03:54:40",
+            "username": "user3",
+            "winner": "Draw",
+            "winner1": "user3",
+            "winner2": "user2000"
+        },
+        {
+            "opponent": "user3",
+            "role1": "Plant",
+            "role2": "Zombie",
+            "time": "2024-07-11,03:56:10",
+            "username": "user2000",
+            "winner": "Draw",
+            "winner1": "user3",
+            "winner2": "user2000"
+        },
+        {
+            "opponent": "user2000",
+            "role1": "Zombie",
+            "role2": "Plant",
+            "time": "2024-07-11,03:56:10",
+            "username": "user3",
+            "winner": "Draw",
+            "winner1": "user3",
+            "winner2": "user2000"
         }
     ]
 }
