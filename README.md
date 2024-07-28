@@ -1,4 +1,4 @@
-Plants Vs Zombies Game Developed With C++ in Qt
+Plants Vs Zombies Game Made in C++ Using Qt FrameWork
 
 Final Project Of AP Class at Isfahan University Of Technology
 
