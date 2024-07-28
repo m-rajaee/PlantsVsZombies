@@ -1,6 +1,6 @@
 Plants Vs Zombies Game Developed With C++ in Qt
 
-Final Project Of AP Class in Isfahan University Of Technology
+Final Project Of AP Class at Isfahan University Of Technology
 
 How A Match Starts :
 
