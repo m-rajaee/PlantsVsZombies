@@ -1,4 +1,4 @@
-Final Project Of AP Class at Isfahan University Of Technology
+Final Project Of Advanced Programming Class at Isfahan University Of Technology
 
 Developed a multiplayer game using C++ and Qt framework.
 Implemented game logic, object-oriented design, and client-server communication between players.
