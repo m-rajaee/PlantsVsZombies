@@ -115,3 +115,5 @@ All have been added to the repository collaborators section.
 # Acknowledgements
 
 Special thanks to the course professor and teaching assistants for their guidance and support throughout the development of this project.
+
+*The project has windows installer that did'nt uploaded on github.
