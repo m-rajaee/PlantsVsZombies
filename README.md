@@ -1,4 +1,4 @@
-# Multiplayer Plant vs. Zombies Inspired Game
+# Plants vs. Zombies 
 
 A two-player multiplayer strategy game inspired by **Plants vs. Zombies**, developed in **C++ using Qt Framework** as the final project for the Advanced Programming course at Isfahan University of Technology.
 
